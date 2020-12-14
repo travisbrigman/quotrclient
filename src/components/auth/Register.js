@@ -34,7 +34,7 @@ export const Register = (props) => {
                 .then(res => res.json())
                 .then(res => {
                         localStorage.setItem("rare_user_id", res.token)
-                        props.history.push("/home") //redirects to home page
+                        props.history.push("/") //redirects to home page
                 })
         } else {
             passwordDialog.current.showModal()
