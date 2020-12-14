@@ -1,44 +1,38 @@
-import { useState } from "react";
-import { Box, Button, Heading, Grommet, ResponsiveContext } from "grommet";
-import { Notification } from "grommet-icons";
-import AppHeader from "./components/AppHeader";
-import AppSidebar from "./components/AppSidebar";
-import theme from "./theme";
+import { Route, Redirect } from "react-router-dom";
+import { ResponsiveContext } from "grommet";
+import { Login } from "./components/auth/Login";
+import { Register } from "./components/auth/Register";
+import { Home } from "./components/Home";
 
-function App() {
-  const [showSidebar, setShowSidebar] = useState(false);
-
+export const App = () => {
   return (
-    <Grommet theme={theme} themeMode="light" full>
-      <ResponsiveContext.Consumer>
-        {(size) => (
-          <Box fill>
-            <AppHeader>
-              <Heading level="3" margin="none">
-                My App
-              </Heading>
-              <Button
-                icon={<Notification />}
-                onClick={() => setShowSidebar(!showSidebar)}
-              />
-            </AppHeader>
-            <Box direction="row" flex overflow={{ horizontal: "hidden" }}>
-              <Box flex align="center" justify="center">
-                app body
-              </Box>
-              <AppSidebar
-                size={size}
-                showSidebar={showSidebar}
-                onClose={() => setShowSidebar(false)}
-              >
-                sidebar
-              </AppSidebar>
-            </Box>
-          </Box>
-        )}
-      </ResponsiveContext.Consumer>
-    </Grommet>
+    <ResponsiveContext.Consumer>
+          {(size) => (<>
+        <Route exact path="/home" render={(props, size) => <Home {...props} />} />
+
+        <Route
+          path="/login"
+          render={(props) => {
+            if (localStorage.getItem("quotr_user_id")) {
+              return <Redirect to="/home" />;
+            } else {
+              return <Login {...props} />;
+            }
+          }}
+        />
+
+        <Route
+          path="/register"
+          render={(props) => {
+            if (localStorage.getItem("quotr_user_id")) {
+              return <Redirect to="/home" />;
+            } else {
+              return <Register {...props} />;
+            }
+          }}
+        />
+        </>)}
+    </ResponsiveContext.Consumer>
   );
 }
 
-export default App;
