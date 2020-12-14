@@ -10,6 +10,8 @@ import AppHeader from "./components/AppHeader/AppHeader";
 import { useState } from "react";
 import { StaticSideBar } from "./components/StaticSideBar/Sidebar";
 import { CatalogProvider } from "./components/Catalog/CatalogProvider";
+import { CustomerProvider } from "./components/Customers/CustomerProvider";
+import { Customers } from "./components/Customers/Customers";
 
 export const App = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -27,29 +29,31 @@ export const App = () => {
               onClick={() => setShowSidebar(!showSidebar)}
             />
           </AppHeader>
-        <Box direction="row" fill>
-          <Box direction="row" >
-            <StaticSideBar />
-          </Box>
-          <Route
-            exact
-            path="/home"
-            render={(props, size) => <Home {...props} />}
-          />
-            <CatalogProvider>
-          <Switch>
-            <Route
-              exact
-              path="/catalog"
-              render={(props, size) => <PartsCatalog {...props} />}
-            />
-            <Route
-              exact
-              path="/proposals"
-              render={(props, size) => <Proposals {...props} />}
-            />
-          </Switch>
-          </CatalogProvider>
+          <Box direction="row" fill>
+            <Box direction="row">
+              <StaticSideBar />
+            </Box>
+            <CustomerProvider>
+              <CatalogProvider>
+                <Switch>
+                  <Route
+                    exact
+                    path="/catalog"
+                    render={(props, size) => <PartsCatalog {...props} />}
+                  />
+                  <Route
+                    exact
+                    path="/proposals"
+                    render={(props, size) => <Proposals {...props} />}
+                  />
+                  <Route
+                    exact
+                    path="/customers"
+                    render={(props, size) => <Customers {...props} />}
+                  />
+                </Switch>
+              </CatalogProvider>
+            </CustomerProvider>
           </Box>
           <Route
             path="/login"

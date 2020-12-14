@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { createContext, useState } from "react";
 
-export const CatalogContext = React.createContext();
+export const CatalogContext = createContext();
 
 export const CatalogProvider = (props) => {
   const [items, setItems] = useState([]);
 
   const getItems = () => {
-    return fetch("http://localhost:8000/items", {
+    return fetch("http://127.0.0.1:8000/items", {
       headers: {
         Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
       },
