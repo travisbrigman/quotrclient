@@ -43,9 +43,9 @@ export const Login = (props) => {
     e.preventDefault();
     existingUserCheck().then((exists) => {
       if (exists.valid) {
-        localStorage.setItem("rare_user_id", exists.token);
+        localStorage.setItem("quotr_user_id", exists.token);
         props.history.push("/home");
-      } else if (exists.valid != true) {
+      } else if (exists.valid !== true) {
         setShow(true);
       } else if (!exists) {
         setShowUser(true);

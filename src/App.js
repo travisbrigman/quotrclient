@@ -3,12 +3,13 @@ import { Box, Button, Heading, ResponsiveContext } from "grommet";
 import { Login } from "./components/auth/Login";
 import { Register } from "./components/auth/Register";
 import { Home } from "./components/Home";
-import { PartsCatalog } from "./components/PartsCatalog";
+import { PartsCatalog } from "./components/Catalog/PartsCatalog";
 import { Proposals } from "./components/Proposals";
 import { Logout } from "grommet-icons";
 import AppHeader from "./components/AppHeader/AppHeader";
 import { useState } from "react";
 import { StaticSideBar } from "./components/StaticSideBar/Sidebar";
+import { CatalogProvider } from "./components/Catalog/CatalogProvider";
 
 export const App = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -27,7 +28,7 @@ export const App = () => {
             />
           </AppHeader>
         <Box direction="row" fill>
-          <Box direction="row" flex overflow={{ horizontal: "hidden" }}>
+          <Box direction="row" >
             <StaticSideBar />
           </Box>
           <Route
@@ -35,6 +36,7 @@ export const App = () => {
             path="/home"
             render={(props, size) => <Home {...props} />}
           />
+            <CatalogProvider>
           <Switch>
             <Route
               exact
@@ -47,6 +49,7 @@ export const App = () => {
               render={(props, size) => <Proposals {...props} />}
             />
           </Switch>
+          </CatalogProvider>
           </Box>
           <Route
             path="/login"
