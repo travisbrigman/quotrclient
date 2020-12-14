@@ -11,7 +11,9 @@ import { useState } from "react";
 import { StaticSideBar } from "./components/StaticSideBar/Sidebar";
 import { CatalogProvider } from "./components/Catalog/CatalogProvider";
 import { CustomerProvider } from "./components/Customers/CustomerProvider";
+import { UserProvider } from "./components/Users/UserProvider";
 import { Customers } from "./components/Customers/Customers";
+import { Users } from "./components/Users/Users";
 
 export const App = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -33,6 +35,7 @@ export const App = () => {
             <Box direction="row">
               <StaticSideBar />
             </Box>
+            <UserProvider>
             <CustomerProvider>
               <CatalogProvider>
                 <Switch>
@@ -51,9 +54,15 @@ export const App = () => {
                     path="/customers"
                     render={(props, size) => <Customers {...props} />}
                   />
+                  <Route
+                    exact
+                    path="/users"
+                    render={(props, size) => <Users {...props} />}
+                  />
                 </Switch>
               </CatalogProvider>
             </CustomerProvider>
+            </UserProvider>
           </Box>
           <Route
             path="/login"
