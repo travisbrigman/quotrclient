@@ -79,7 +79,7 @@ export const Login = (props) => {
         )}
       </Box>
       <Box direction="column" alignSelf="center">
-        <Heading level="1">Rare</Heading>
+        <Heading level="1">Quotr</Heading>
         <Heading level="2">Sign In</Heading>
         <Form className="form--login" onSubmit={handleLogin}>
           <FormField label="Email address" htmlFor="inputEmail">

@@ -15,8 +15,6 @@ import { Users } from "./components/Users/Users";
 
 export const App = () => {
   const history = useHistory();
-  console.log(localStorage.getItem("quotr_user_id"));
-  
 
   return (
     <ResponsiveContext.Consumer>
@@ -54,7 +52,10 @@ export const App = () => {
             </AppHeader>
             <Box direction="row" fill>
               <Box direction="row">
+                <CatalogProvider>
+
                 <StaticSideBar />
+                </CatalogProvider>
               </Box>
               <UserProvider>
                 <CustomerProvider>
