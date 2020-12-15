@@ -16,8 +16,6 @@ export const Customers = () => {
         getCustomers()
     },[]);
 
-    console.log(customers);
-    
 
     return (
 

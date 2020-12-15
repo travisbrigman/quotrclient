@@ -25,7 +25,7 @@ export const NewCustomerModal = ({ open, onClose }, props) => {
     });
   }
 
-  const { createCustomer } = useContext(CustomerContext);
+  const { createCustomer, getCustomers } = useContext(CustomerContext);
 
   const handleNewCustomer = (e) => {
     e.preventDefault();
@@ -39,6 +39,7 @@ export const NewCustomerModal = ({ open, onClose }, props) => {
       createCustomer(state)
       onClose();
       setState({})
+      getCustomers()
     }
   };
 
