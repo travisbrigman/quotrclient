@@ -27,13 +27,26 @@ export const CatalogProvider = (props) => {
     .then(res => res.json())
   }
 
+  const updateItem = (itemObject) => {
+    return fetch(`http://localhost:8000/items/${itemObject.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${localStorage.getItem("quotr_user_id")}`
+        },
+        body: JSON.stringify(itemObject)
+    })
+        .then(getItems)
+}
+
   return (
     <CatalogContext.Provider
       value={{
         getItems,
         items,
         setItems,
-        addItemToProposal
+        addItemToProposal,
+        updateItem
       }}
     >
       {props.children}

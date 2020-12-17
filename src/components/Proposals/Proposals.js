@@ -13,6 +13,8 @@ import { useContext, useEffect, useState } from "react";
 import { ProposalContext } from "./ProposalProvider";
 import { columns } from "./ProposalColumns";
 import { AddCustomerToProposal } from "./AddCustToNewProposal";
+import { EditLineItem } from "./EditLineItem";
+import { CatalogContext } from "../Catalog/CatalogProvider";
 
 export const Proposals = () => {
   const {
@@ -26,6 +28,8 @@ export const Proposals = () => {
     createProposal,
   } = useContext(ProposalContext);
 
+  const { updateItem } = useContext(CatalogContext)
+
   useEffect(() => {
     getProposals();
   }, []);
@@ -36,15 +40,17 @@ export const Proposals = () => {
   //MODAL STUFF
   const [openModal, setOpenModal] = useState(false);
   const onClose = () => setOpenModal(false);
-  
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+
   const newProposal = () => {
     setOpenModal(true);
   };
 
   const constructNewProposal = (selectedCustomerId) => {
-    const propObject = { customer_id: selectedCustomerId }
-    createProposal(propObject)
-  }
+    const propObject = { customer_id: selectedCustomerId };
+    createProposal(propObject);
+  };
 
   //𝒇𝒇𝒇 FUNCTIONS FOR PROPOSAL LIST ACTIONS 𝒇𝒇𝒇
   const displayProposal = (singleProposalId) => {
@@ -55,8 +61,6 @@ export const Proposals = () => {
   const deleteSingleProposal = (proposalToDelete) => {
     deleteProposal(proposalToDelete);
   };
-
-
 
   //✅ CHECKBOX GLUE ✅
   const [checked, setChecked] = useState([]);
@@ -79,11 +83,30 @@ export const Proposals = () => {
     });
     setChecked([]);
   };
-  console.log(checked);
 
+  const editLineItem = (margin) => {
+      checked.forEach(checkedLineItemId => {
+          const matched = singleProposal.items.find(proposalItem => proposalItem.id === checkedLineItemId)
+          const updateObj = { id: matched.item.id, margin: margin };
+          updateItem(updateObj)
+
+      })
+    setOpenEditModal(false)
+    setChecked([])
+    getSingleProposal(singleProposal.id)
+
+  };
+
+  console.log(checked);
+  
   return (
     <Box direction="column">
-      <AddCustomerToProposal open={openModal} onClose={onClose} constructNewProposal={constructNewProposal} />
+      <AddCustomerToProposal
+        open={openModal}
+        onClose={onClose}
+        constructNewProposal={constructNewProposal}
+      />
+      <EditLineItem open={openEditModal} setOpen={setOpenEditModal} editLineItem={editLineItem} />
       <Heading>Proposals</Heading>
       <Box direction="row">
         {open && (
@@ -148,6 +171,8 @@ export const Proposals = () => {
                 resizeable
               />
             </Box>
+            <Button label="delete selected" onClick={deleteLineItem} />
+            <Button label="edit selected" onClick={setOpenEditModal} />
           </Box>
         )}
         <Box pad="large">
@@ -190,7 +215,7 @@ export const Proposals = () => {
           />
         </Box>
       </Box>
-      <Button label="delete selected" onClick={deleteLineItem} />
+
       <Button label="Start New Proposal" onClick={newProposal} />
     </Box>
   );
