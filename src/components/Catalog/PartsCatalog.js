@@ -1,13 +1,9 @@
 import {
   Box,
   Button,
-  Card,
   CheckBox,
   DataTable,
-  Grid,
   Heading,
-  InfiniteScroll,
-  ResponsiveContext,
 } from "grommet";
 import { Compliance } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";

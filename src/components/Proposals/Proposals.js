@@ -21,7 +21,6 @@ export const Proposals = () => {
     getProposals,
     proposals,
     getSingleProposal,
-    setSingleProposal,
     singleProposal,
     deleteProposal,
     deleteProposalItem,

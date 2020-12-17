@@ -1,12 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./App.js";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Grommet } from "grommet";
-import {theme} from "./theme.js"
-import { Login } from "./components/auth/Login.js";
-import { Register } from "./components/auth/Register.js";
+import { theme } from "./theme.js"
 import { Quotr } from "./Quotr.js";
 
 

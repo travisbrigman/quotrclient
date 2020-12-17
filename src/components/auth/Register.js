@@ -11,7 +11,6 @@ export const Register = (props) => {
     const password = useRef()
     const verifyPassword = useRef()
     const passwordDialog = useRef()
-    const bio = useRef()
 
     const handleRegister = (e) => {
         e.preventDefault()

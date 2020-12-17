@@ -6,7 +6,6 @@ import {
   FormField,
   Heading,
   Layer,
-  Text,
   TextInput,
 } from "grommet";
 import { CustomerContext } from "./CustomerProvider";

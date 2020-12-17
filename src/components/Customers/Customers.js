@@ -1,4 +1,4 @@
-import { Box, Button, DataTable, Heading, List } from "grommet";
+import { Box, Button, DataTable, Heading } from "grommet";
 import { useContext, useEffect, useState } from "react"
 import { CustomerContext } from "./CustomerProvider.js";
 import { columns } from "./CustomerColums.js"

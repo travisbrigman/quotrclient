@@ -1,7 +1,5 @@
-import { Link, Route, Redirect, Switch, useHistory } from "react-router-dom";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
 import { Anchor, Box, Button, Heading, ResponsiveContext } from "grommet";
-import { Login } from "./components/auth/Login";
-import { Register } from "./components/auth/Register";
 import { PartsCatalog } from "./components/Catalog/PartsCatalog";
 import { Proposals } from "./components/Proposals/Proposals";
 import { Logout } from "grommet-icons";

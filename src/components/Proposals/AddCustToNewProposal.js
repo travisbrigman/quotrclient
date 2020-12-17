@@ -5,7 +5,6 @@ import {
   DataTable,
   Heading,
   Layer,
-  Text,
 } from "grommet";
 import { CustomerContext } from "../Customers/CustomerProvider.js";
 import { columns } from "../Customers/CustomerColums";

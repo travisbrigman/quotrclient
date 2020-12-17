@@ -1,8 +1,7 @@
 import React from "react";
 import { Avatar, Button, Nav, Sidebar } from "grommet";
 import { Catalog, Clipboard, Group, User } from "grommet-icons";
-import { Link, Route } from "react-router-dom"
-import{PartsCatalog} from "../Catalog/PartsCatalog.js"
+import { Link } from "react-router-dom"
 
 export const StaticSideBar = () => {
 
