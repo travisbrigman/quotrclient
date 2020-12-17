@@ -1,5 +1,4 @@
 import { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
 import {
   Box,
   Button,
@@ -13,7 +12,6 @@ import {
 import { CustomerContext } from "./CustomerProvider";
 
 export const NewCustomerModal = ({ open, onClose }, props) => {
-  const history = useHistory();
 
   const [state, setState] = useState({});
 

@@ -10,7 +10,8 @@ export const columns = [
       header: 'Line Item',
       aggregate: "sum",
       footer: {"aggregate": true},
-      primary: true
+      primary: true,
+      size: "xsmall"
     },
     {
       property: 'item.make',
@@ -30,9 +31,11 @@ export const columns = [
     //   render: datum => amountFormatter.format(datum.cost),
       aggregate: 'sum',
       footer: {"aggregate": true},
+      size: "xsmall"
     },
     {
       property: 'item.margin',
       header: 'margin',
+      size: "xsmall"
     }
 ]

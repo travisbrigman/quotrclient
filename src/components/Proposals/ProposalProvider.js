@@ -6,6 +6,7 @@ export const ProposalProvider = (props) => {
   const [proposals, setProposals] = useState([]);
   const [singleProposal, setSingleProposal] = useState({
     customer: { organization: "" },
+    items: [],
   });
 
   const getProposals = () => {
@@ -28,6 +29,39 @@ export const ProposalProvider = (props) => {
       .then(setSingleProposal);
   };
 
+  const deleteProposal = (selectedProposal) => {
+    return fetch(`http://127.0.0.1:8000/proposals/${selectedProposal}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(selectedProposal),
+    }).then(getProposals);
+  };
+
+  const deleteProposalItem = (checkedProposalItem) => {
+    return fetch(`http://127.0.0.1:8000/proposalitems/${checkedProposalItem}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(checkedProposalItem),
+    });
+    //   .then(getSingleProposal);
+  };
+
+  const createProposal = (newProposal) => {
+    return fetch(`http://127.0.0.1:8000/proposals`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(newProposal),
+    })
+      .then(getProposals);
+  };
+
   return (
     <ProposalContext.Provider
       value={{
@@ -37,6 +71,9 @@ export const ProposalProvider = (props) => {
         getSingleProposal,
         setSingleProposal,
         singleProposal,
+        deleteProposal,
+        deleteProposalItem,
+        createProposal,
       }}
     >
       {props.children}
