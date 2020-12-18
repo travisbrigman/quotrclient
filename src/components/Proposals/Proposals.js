@@ -27,7 +27,7 @@ export const Proposals = () => {
     createProposal,
   } = useContext(ProposalContext);
 
-  const { updateItem } = useContext(CatalogContext)
+  const { patchItem } = useContext(CatalogContext)
 
   useEffect(() => {
     getProposals();
@@ -87,7 +87,7 @@ export const Proposals = () => {
       checked.forEach(checkedLineItemId => {
           const matched = singleProposal.items.find(proposalItem => proposalItem.id === checkedLineItemId)
           const updateObj = { id: matched.item.id, margin: margin };
-          updateItem(updateObj)
+          patchItem(updateObj)
 
       })
     setOpenEditModal(false)

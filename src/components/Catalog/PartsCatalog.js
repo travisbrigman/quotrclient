@@ -14,9 +14,9 @@ import { ProposalContext } from "../Proposals/ProposalProvider.js";
 const controlledColumns = columns.map((col) => ({ ...col }));
 
 export const PartsCatalog = (props) => {
-  const { getItems, items, addItemToProposal } = useContext(CatalogContext);
+  const { getItems, items, addItemToProposal, checked, setChecked } = useContext(CatalogContext);
   const { singleProposal } = useContext(ProposalContext);
-  const [checked, setChecked] = useState([]);
+
 
   const onCheck = (event, value) => {
     if (event.target.checked) {
@@ -42,6 +42,7 @@ export const PartsCatalog = (props) => {
     });
     setChecked([]);
   };
+
 
   return (
     <Box pad="large">

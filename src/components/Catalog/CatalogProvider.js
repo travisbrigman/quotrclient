@@ -4,6 +4,8 @@ export const CatalogContext = createContext();
 
 export const CatalogProvider = (props) => {
   const [items, setItems] = useState([]);
+  const [singleItem, setSingleItem ] = useState({})
+  const [checked, setChecked] = useState([]);
 
   const getItems = () => {
     return fetch("http://127.0.0.1:8000/items", {
@@ -13,6 +15,16 @@ export const CatalogProvider = (props) => {
     })
       .then((res) => res.json())
       .then(setItems);
+  };
+
+  const getSingleItem = (itemId) => {
+    return fetch(`http://127.0.0.1:8000/items/${itemId}`, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then(setSingleItem);
   };
 
   const addItemToProposal = (proposalItem) => {
@@ -26,6 +38,18 @@ export const CatalogProvider = (props) => {
     })
     .then(res => res.json())
   }
+
+  const patchItem = (itemObject) => {
+    return fetch(`http://localhost:8000/items/${itemObject.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${localStorage.getItem("quotr_user_id")}`
+        },
+        body: JSON.stringify(itemObject)
+    })
+        .then(getItems)
+}
 
   const updateItem = (itemObject) => {
     return fetch(`http://localhost:8000/items/${itemObject.id}`, {
@@ -58,8 +82,14 @@ const createItem = (newItem) => {
         items,
         setItems,
         addItemToProposal,
+        patchItem,
+        createItem,
         updateItem,
-        createItem
+        getSingleItem,
+        setSingleItem,
+        singleItem,
+        checked,
+        setChecked
       }}
     >
       {props.children}
