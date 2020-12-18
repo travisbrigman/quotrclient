@@ -39,6 +39,18 @@ export const CatalogProvider = (props) => {
         .then(getItems)
 }
 
+const createItem = (newItem) => {
+  return fetch("http://127.0.0.1:8000/items", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Token ${localStorage.getItem("quotr_user_id")}`
+    },
+    body: JSON.stringify(newItem)
+  })
+  .then(res => res.json())
+}
+
   return (
     <CatalogContext.Provider
       value={{
@@ -46,7 +58,8 @@ export const CatalogProvider = (props) => {
         items,
         setItems,
         addItemToProposal,
-        updateItem
+        updateItem,
+        createItem
       }}
     >
       {props.children}

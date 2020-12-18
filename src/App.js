@@ -11,6 +11,7 @@ import { UserProvider } from "./components/Users/UserProvider";
 import { Customers } from "./components/Customers/Customers";
 import { Users } from "./components/Users/Users";
 import { ProposalProvider } from "./components/Proposals/ProposalProvider";
+import { AddCatalogItem } from "./components/Catalog/AddCatalogItem";
 
 export const App = () => {
   const history = useHistory();
@@ -63,7 +64,12 @@ export const App = () => {
                         <Route
                           exact
                           path="/catalog"
-                          render={(props, size) => <PartsCatalog {...props} />}
+                          render={(props, size) => (
+                            <Box direction="column">
+                              <AddCatalogItem />
+                              <PartsCatalog {...props} />
+                            </Box>
+                          )}
                         />
                         <Route
                           exact
