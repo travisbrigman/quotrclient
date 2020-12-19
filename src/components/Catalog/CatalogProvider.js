@@ -4,7 +4,7 @@ export const CatalogContext = createContext();
 
 export const CatalogProvider = (props) => {
   const [items, setItems] = useState([]);
-  const [singleItem, setSingleItem ] = useState({})
+  const [singleItem, setSingleItem] = useState({});
   const [checked, setChecked] = useState([]);
 
   const getItems = () => {
@@ -24,7 +24,10 @@ export const CatalogProvider = (props) => {
       },
     })
       .then((res) => res.json())
-      .then(setSingleItem);
+      .then((returnedItem) => {
+        setSingleItem(returnedItem);
+        return returnedItem;
+      });
   };
 
   const addItemToProposal = (proposalItem) => {
@@ -32,48 +35,46 @@ export const CatalogProvider = (props) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
       },
-      body: JSON.stringify(proposalItem)
+      body: JSON.stringify(proposalItem),
     })
-    .then(res => res.json())
-  }
+      .then((res) => res.json())
+      .then(console.log(res => res.json));
+  };
 
   const patchItem = (itemObject) => {
     return fetch(`http://localhost:8000/items/${itemObject.id}`, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Token ${localStorage.getItem("quotr_user_id")}`
-        },
-        body: JSON.stringify(itemObject)
-    })
-        .then(getItems)
-}
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(itemObject),
+    }).then(getItems);
+  };
 
   const updateItem = (itemObject) => {
     return fetch(`http://localhost:8000/items/${itemObject.id}`, {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Token ${localStorage.getItem("quotr_user_id")}`
-        },
-        body: JSON.stringify(itemObject)
-    })
-        .then(getItems)
-}
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(itemObject),
+    }).then(getItems);
+  };
 
-const createItem = (newItem) => {
-  return fetch("http://127.0.0.1:8000/items", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Token ${localStorage.getItem("quotr_user_id")}`
-    },
-    body: JSON.stringify(newItem)
-  })
-  .then(res => res.json())
-}
+  const createItem = (newItem) => {
+    return fetch("http://127.0.0.1:8000/items", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(newItem),
+    }).then((res) => res.json());
+  };
 
   return (
     <CatalogContext.Provider
@@ -89,7 +90,7 @@ const createItem = (newItem) => {
         setSingleItem,
         singleItem,
         checked,
-        setChecked
+        setChecked,
       }}
     >
       {props.children}

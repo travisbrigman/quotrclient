@@ -1,12 +1,6 @@
-import {
-  Box,
-  Button,
-  CheckBox,
-  DataTable,
-  Heading,
-} from "grommet";
+import { Box, Button, CheckBox, DataTable, Heading } from "grommet";
 import { Compliance } from "grommet-icons";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
 import { columns } from "./CatalogColumns.js";
 import { ProposalContext } from "../Proposals/ProposalProvider.js";
@@ -14,9 +8,14 @@ import { ProposalContext } from "../Proposals/ProposalProvider.js";
 const controlledColumns = columns.map((col) => ({ ...col }));
 
 export const PartsCatalog = (props) => {
-  const { getItems, items, addItemToProposal, checked, setChecked } = useContext(CatalogContext);
+  const {
+    getItems,
+    items,
+    addItemToProposal,
+    checked,
+    setChecked,
+  } = useContext(CatalogContext);
   const { singleProposal } = useContext(ProposalContext);
-
 
   const onCheck = (event, value) => {
     if (event.target.checked) {
@@ -38,11 +37,11 @@ export const PartsCatalog = (props) => {
       addItemToProposal({
         item_id: selectedItems,
         proposal_id: singleProposal.id,
-      });
-    });
+      })
+    }
+    )
     setChecked([]);
   };
-
 
   return (
     <Box pad="large">

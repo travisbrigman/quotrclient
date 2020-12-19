@@ -7,25 +7,44 @@ import {
   TextInput,
   TextArea,
 } from "grommet";
-import { Add, Close, Edit } from "grommet-icons";
+import { Add, Close, Edit, Update } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
+import { ModalContext } from "./PartsCatalog.js";
+import { SingleEditPopUp } from "./SingleEditPopup.js";
 
 export const AddCatalogItem = (props) => {
-  const { createItem, getSingleItem, checked, setChecked } = useContext(CatalogContext);
-  const [open, setOpen] = useState(false);
+  const {
+    createItem,
+    getItems,
+    getSingleItem,
+    checked,
+    setChecked,
+    updateItem,
+  } = useContext(CatalogContext);
+
+  //modal glue
   const [editMode, setEditMode] = useState(false);
-
-  const onOpen = () => setOpen(true);
-  const onClose = () => setOpen(undefined);
-
   var jsonDate = new Date().toJSON();
-
   const [state, setState] = useState({ created_on: jsonDate });
 
+  const onClose = () => {
+    setOpen(undefined);
     if (editMode) {
-      getSingleItem(checked[0]).then(setState);
+      setEditMode(false);
+      setState({ created_on: jsonDate });
     }
+  };
+  const [open, setOpen] = useState(false);
+  const onOpen = () => setOpen(true);
+
+  const [viewSingleEdit, setViewSingleEdit ] = useState(false)
+
+  useEffect(() => {
+      if (editMode) {  
+          getSingleItem(checked[0]).then(setState);
+      }
+  }, [checked, editMode]);
 
   function handleChange(evt) {
     const value = evt.target.value;
@@ -34,29 +53,46 @@ export const AddCatalogItem = (props) => {
       [evt.target.name]: value,
     });
   }
+  console.log(checked.length);
+  
 
   const handleClick = () => {
     if (editMode) {
-      //stuff
+      updateItem({
+        id: state.id,
+        make: state.make,
+        model: state.model,
+        cost: state.cost,
+        margin: state.margin,
+        description: state.description,
+        image_url: state.image_url,
+        created_on: jsonDate,
+      })
+        .then(setChecked([]))
+        .then(getItems);
+      setEditMode(false);
     } else {
       createItem(state);
     }
     onClose();
-    setState({});
+    setState({ created_on: jsonDate });
   };
 
   return (
     <>
+      <Button icon={<Add />} label="Add" onClick={onOpen} />
+      <Button
+        icon={<Edit />}
+        label="Edit"
+        onClick={() => {
+          setEditMode(true);
+          onOpen();
+          if (checked.length > 1) {
+            setViewSingleEdit(true)
+        }
+        }}
+      />
       <Box align="end" justify="center" pad="small">
-        <Button icon={<Add />} label="Add" onClick={onOpen} />
-        <Button
-          icon={<Edit />}
-          label="Edit"
-          onClick={() => {
-            onOpen();
-            setEditMode(true);
-          }}
-        />
         {open && (
           <Layer
             position="top"
@@ -65,14 +101,7 @@ export const AddCatalogItem = (props) => {
             onClickOutside={onClose}
             onEsc={onClose}
           >
-            <Box
-              as="form"
-              fill="horizontal"
-              overflow="auto"
-              width="medium"
-              pad="medium"
-              onSubmit={onClose}
-            >
+            <Box fill="horizontal" overflow="auto" width="medium" pad="medium">
               <Box flex={false} direction="row" justify="between">
                 <Heading level={3} margin="none">
                   Add
@@ -132,6 +161,7 @@ export const AddCatalogItem = (props) => {
           </Layer>
         )}
       </Box>
+      <SingleEditPopUp viewSingleEdit={viewSingleEdit} setViewSingleEdit={setViewSingleEdit}/>
     </>
   );
 };
