@@ -1,16 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./App.js";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Grommet } from "grommet";
-import {theme} from "./theme.js"
+import { theme } from "./theme.js"
+import { Quotr } from "./Quotr.js";
+
 
 ReactDOM.render(
   <React.StrictMode>
     <Grommet theme={theme} full>
       <Router>
-        <App />
+        <Quotr />
       </Router>
     </Grommet>
   </React.StrictMode>,

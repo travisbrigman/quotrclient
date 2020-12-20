@@ -1,75 +1,99 @@
-import { Route, Redirect, Switch } from "react-router-dom";
-import { Box, Button, Heading, ResponsiveContext } from "grommet";
-import { Login } from "./components/auth/Login";
-import { Register } from "./components/auth/Register";
-import { Home } from "./components/Home";
-import { PartsCatalog } from "./components/PartsCatalog";
-import { Proposals } from "./components/Proposals";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { Anchor, Box, Button, Heading, ResponsiveContext } from "grommet";
+import { ModalContext, PartsCatalog } from "./components/Catalog/PartsCatalog";
+import { Proposals } from "./components/Proposals/Proposals";
 import { Logout } from "grommet-icons";
 import AppHeader from "./components/AppHeader/AppHeader";
-import { useState } from "react";
 import { StaticSideBar } from "./components/StaticSideBar/Sidebar";
+import { CatalogProvider } from "./components/Catalog/CatalogProvider";
+import { CustomerProvider } from "./components/Customers/CustomerProvider";
+import { UserProvider } from "./components/Users/UserProvider";
+import { Customers } from "./components/Customers/Customers";
+import { Users } from "./components/Users/Users";
+import { ProposalProvider } from "./components/Proposals/ProposalProvider";
+import { AddCatalogItem } from "./components/Catalog/AddCatalogItem";
 
 export const App = () => {
-  const [showSidebar, setShowSidebar] = useState(false);
+  const history = useHistory();
 
   return (
     <ResponsiveContext.Consumer>
       {(size) => (
-        <Box fill>
-          <AppHeader>
-            <Heading level="3" margin="none">
-              Quotr
-            </Heading>
-            <Button
-              icon={<Logout />}
-              onClick={() => setShowSidebar(!showSidebar)}
-            />
-          </AppHeader>
-        <Box direction="row" fill>
-          <Box direction="row" flex overflow={{ horizontal: "hidden" }}>
-            <StaticSideBar />
+        <>
+          <Box fill>
+            <AppHeader>
+              <Heading level="3" margin="none">
+                Quotr
+              </Heading>
+              {localStorage.getItem("quotr_user_id") != null ? (
+                <Button
+                  icon={<Logout />}
+                  onClick={() => {
+                    localStorage.removeItem("quotr_user_id");
+                    history.push({ pathname: "/login" });
+                  }}
+                />
+              ) : (
+                <>
+                  <Anchor
+                    as={Link}
+                    className="nav-link"
+                    to="/login"
+                    label="Login"
+                  />
+                  <Anchor
+                    as={Link}
+                    className="nav-link"
+                    to="/register"
+                    label="Register"
+                  />
+                </>
+              )}
+            </AppHeader>
+            <Box direction="row" fill>
+              <Box direction="row">
+                <CatalogProvider>
+                  <StaticSideBar />
+                </CatalogProvider>
+              </Box>
+              <ProposalProvider>
+                <UserProvider>
+                  <CustomerProvider>
+                    <CatalogProvider>
+                      <Switch>
+                        <Route
+                          exact
+                          path="/catalog"
+                          render={(props, size) => (
+                            <Box direction="column">
+                              <AddCatalogItem />
+                              <PartsCatalog {...props} />
+                            </Box>
+                          )}
+                        />
+                        <Route
+                          exact
+                          path="/proposals"
+                          render={(props, size) => <Proposals {...props} />}
+                        />
+                        <Route
+                          exact
+                          path="/customers"
+                          render={(props, size) => <Customers {...props} />}
+                        />
+                        <Route
+                          exact
+                          path="/users"
+                          render={(props, size) => <Users {...props} />}
+                        />
+                      </Switch>
+                    </CatalogProvider>
+                  </CustomerProvider>
+                </UserProvider>
+              </ProposalProvider>
+            </Box>
           </Box>
-          <Route
-            exact
-            path="/home"
-            render={(props, size) => <Home {...props} />}
-          />
-          <Switch>
-            <Route
-              exact
-              path="/catalog"
-              render={(props, size) => <PartsCatalog {...props} />}
-            />
-            <Route
-              exact
-              path="/proposals"
-              render={(props, size) => <Proposals {...props} />}
-            />
-          </Switch>
-          </Box>
-          <Route
-            path="/login"
-            render={(props) => {
-              if (localStorage.getItem("quotr_user_id")) {
-                return <Redirect to="/home" />;
-              } else {
-                return <Login {...props} />;
-              }
-            }}
-          />
-
-          <Route
-            path="/register"
-            render={(props) => {
-              if (localStorage.getItem("quotr_user_id")) {
-                return <Redirect to="/home" />;
-              } else {
-                return <Register {...props} />;
-              }
-            }}
-          />
-        </Box>
+        </>
       )}
     </ResponsiveContext.Consumer>
   );

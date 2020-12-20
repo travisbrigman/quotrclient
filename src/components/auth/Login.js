@@ -1,6 +1,6 @@
 //login page
 import React, { useRef, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Anchor,
   Box,
@@ -43,9 +43,9 @@ export const Login = (props) => {
     e.preventDefault();
     existingUserCheck().then((exists) => {
       if (exists.valid) {
-        localStorage.setItem("rare_user_id", exists.token);
-        props.history.push("/home");
-      } else if (exists.valid != true) {
+        localStorage.setItem("quotr_user_id", exists.token);
+        props.history.push("/");
+      } else if (exists.valid !== true) {
         setShow(true);
       } else if (!exists) {
         setShowUser(true);
@@ -79,7 +79,7 @@ export const Login = (props) => {
         )}
       </Box>
       <Box direction="column" alignSelf="center">
-        <Heading level="1">Rare</Heading>
+        <Heading level="1">Quotr</Heading>
         <Heading level="2">Sign In</Heading>
         <Form className="form--login" onSubmit={handleLogin}>
           <FormField label="Email address" htmlFor="inputEmail">
