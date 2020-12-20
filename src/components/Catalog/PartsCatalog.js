@@ -14,6 +14,8 @@ export const PartsCatalog = (props) => {
     addItemToProposal,
     checked,
     setChecked,
+    status,
+    setStatus
   } = useContext(CatalogContext);
   const { singleProposal } = useContext(ProposalContext);
 
@@ -32,17 +34,23 @@ export const PartsCatalog = (props) => {
     getItems();
   }, []);
 
+  let itemsApproved = 0
+  
+  
   const approvedChecked = () => {
-    checked.forEach((selectedItems) => {
-      addItemToProposal({
-        item_id: selectedItems,
-        proposal_id: singleProposal.id,
-      })
-    }
-    )
-    setChecked([]);
-  };
-
+      checked.forEach((selectedItems) => {
+          addItemToProposal({
+              item_id: selectedItems,
+              proposal_id: singleProposal.id,
+            })
+            itemsApproved++
+            // .then(setStatus(false))
+        }
+        )
+        setChecked([]);
+    };
+    
+    console.log(itemsApproved);
   return (
     <Box pad="large">
       <Box direction="column" pad="small">

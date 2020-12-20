@@ -6,6 +6,9 @@ export const CatalogProvider = (props) => {
   const [items, setItems] = useState([]);
   const [singleItem, setSingleItem] = useState({});
   const [checked, setChecked] = useState([]);
+  const [status, setStatus ] = useState(false)
+ 
+  
 
   const getItems = () => {
     return fetch("http://127.0.0.1:8000/items", {
@@ -39,8 +42,10 @@ export const CatalogProvider = (props) => {
       },
       body: JSON.stringify(proposalItem),
     })
-      .then((res) => res.json())
-      .then(console.log(res => res.json));
+    .then((res) => {
+      setStatus(res.ok)
+      res.json()
+    })
   };
 
   const patchItem = (itemObject) => {
@@ -91,6 +96,8 @@ export const CatalogProvider = (props) => {
         singleItem,
         checked,
         setChecked,
+        status,
+        setStatus
       }}
     >
       {props.children}

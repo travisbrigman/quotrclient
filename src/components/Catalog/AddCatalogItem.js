@@ -7,10 +7,9 @@ import {
   TextInput,
   TextArea,
 } from "grommet";
-import { Add, Close, Edit, Update } from "grommet-icons";
+import { Add, Close, Edit } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
-import { ModalContext } from "./PartsCatalog.js";
 import { SingleEditPopUp } from "./SingleEditPopup.js";
 
 export const AddCatalogItem = (props) => {
@@ -38,12 +37,12 @@ export const AddCatalogItem = (props) => {
   const [open, setOpen] = useState(false);
   const onOpen = () => setOpen(true);
 
-  const [viewSingleEdit, setViewSingleEdit ] = useState(false)
+  const [viewSingleEdit, setViewSingleEdit] = useState(false);
 
   useEffect(() => {
-      if (editMode) {  
-          getSingleItem(checked[0]).then(setState);
-      }
+    if (editMode) {
+      getSingleItem(checked[0]).then(setState);
+    }
   }, [checked, editMode]);
 
   function handleChange(evt) {
@@ -53,8 +52,6 @@ export const AddCatalogItem = (props) => {
       [evt.target.name]: value,
     });
   }
-  console.log(checked.length);
-  
 
   const handleClick = () => {
     if (editMode) {
@@ -72,7 +69,7 @@ export const AddCatalogItem = (props) => {
         .then(getItems);
       setEditMode(false);
     } else {
-      createItem(state);
+      createItem(state)
     }
     onClose();
     setState({ created_on: jsonDate });
@@ -88,8 +85,8 @@ export const AddCatalogItem = (props) => {
           setEditMode(true);
           onOpen();
           if (checked.length > 1) {
-            setViewSingleEdit(true)
-        }
+            setViewSingleEdit(true);
+          }
         }}
       />
       <Box align="end" justify="center" pad="small">
@@ -161,7 +158,10 @@ export const AddCatalogItem = (props) => {
           </Layer>
         )}
       </Box>
-      <SingleEditPopUp viewSingleEdit={viewSingleEdit} setViewSingleEdit={setViewSingleEdit}/>
+      <SingleEditPopUp
+        viewSingleEdit={viewSingleEdit}
+        setViewSingleEdit={setViewSingleEdit}
+      />
     </>
   );
 };
