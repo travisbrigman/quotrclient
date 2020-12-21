@@ -7,7 +7,7 @@ import { PartsCatalog } from "../Catalog/PartsCatalog";
 import { Proposals } from "../Proposals/Proposals";
 import { Users } from "../Users/Users";
 import { Customers } from "../Customers/Customers";
-import { Route, Switch } from "react-router-dom"
+import { Route, Switch } from "react-router-dom";
 import { AddCatalogItem } from "../Catalog/AddCatalogItem";
 
 export const PageContent = ({ activeItem }) => {
@@ -28,38 +28,33 @@ export const PageContent = ({ activeItem }) => {
           <Heading level={2} margin={{ vertical: "small" }}>
             {name}
           </Heading>
-          {/* {content && content === "panes" && <PartsCatalog />}
-          {content && content === "cards" && <Proposals />}
-          {content && content === "cards" && <Customers />}
-          {content && content === "cards" && <Users />} */}
           <Switch>
-                        <Route
-                          exact
-                          path="/catalog"
-                          render={(props, size) => (
-                            <Box direction="column">
-                              <AddCatalogItem />
-                              <PartsCatalog {...props} />
-                            </Box>
-                          )}
-                        />
-                        <Route
-                          exact
-                          path="/proposals"
-                          render={(props, size) => <Proposals {...props} />}
-                        />
-                        <Route
-                          exact
-                          path="/customers"
-                          render={(props, size) => <Customers {...props} />}
-                        />
-                        <Route
-                          exact
-                          path="/users"
-                          render={(props, size) => <Users {...props} />}
-                        />
-                        </Switch>
-
+            <Route
+              exact
+              path="/catalog"
+              render={(props, size) => (
+                <Box direction="column">
+                  <AddCatalogItem />
+                  <PartsCatalog {...props} />
+                </Box>
+              )}
+            />
+            <Route
+              exact
+              path="/proposals"
+              render={(props, size) => <Proposals {...props} />}
+            />
+            <Route
+              exact
+              path="/customers"
+              render={(props, size) => <Customers {...props} />}
+            />
+            <Route
+              exact
+              path="/users"
+              render={(props, size) => <Users {...props} />}
+            />
+          </Switch>
         </Box>
       </Box>
     )
@@ -67,5 +62,5 @@ export const PageContent = ({ activeItem }) => {
 };
 
 PageContent.propTypes = {
-  activeItem: PropTypes.number
+  activeItem: PropTypes.number,
 };

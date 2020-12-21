@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Text } from "grommet";
-import { Hpe } from "grommet-icons";
+import { Edit } from "grommet-icons";
 import { PropTypes } from "prop-types";
 
 export const AppIdentity = ({ name }) => (
@@ -14,7 +14,7 @@ export const AppIdentity = ({ name }) => (
       pad={{ vertical: "small" }}
       responsive={false}
     >
-      <Hpe color="brand" />
+      <Edit color="brand" />
       <Box direction="row" gap="xsmall" wrap>
         <Text color="text-strong" weight="bold">
           Quotr

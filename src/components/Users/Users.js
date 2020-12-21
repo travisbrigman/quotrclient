@@ -12,6 +12,6 @@ export const Users = () => {
 
     console.log(users);
     return (
-        <Heading>USERS</Heading>
+        null
     )
 }

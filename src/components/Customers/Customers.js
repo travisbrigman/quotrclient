@@ -20,7 +20,6 @@ export const Customers = () => {
     return (
 
         <Box direction="column" pad="small">
-        <Heading>Customers</Heading>
 
         <NewCustomerModal open={open} onClose={onClose}/>
 

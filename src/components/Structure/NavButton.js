@@ -1,47 +1,25 @@
-import {Box, Button, Drop, ResponsiveContext, Text} from 'grommet'
-import React, { useState, useRef, useContext } from 'react'
+import {Box, Button, Drop,Heading, ResponsiveContext, Text} from 'grommet'
+import { useState, useRef, useContext } from 'react'
 import PropTypes from 'prop-types';
+import { pages } from './Pages';
 
-export const NavButton = ({ active, icon, name, ...rest }) => {
-  const [hover, setHover] = React.useState();
-  const ref = React.useRef();
-  const size = React.useContext(ResponsiveContext);
+export const NavButton = ({ active, icon, name, label, ...rest }) => {
+  const [hover, setHover] = useState();
+  const ref = useRef();
+  const size = useContext(ResponsiveContext);
 
   return (
     <Box fill="horizontal">
       <Button
         ref={ref}
         icon={icon}
+        label={label}
         onMouseOver={() => setHover(true)}
         onFocus={() => setHover(true)}
         onMouseOut={() => setHover(false)}
         onBlur={() => setHover(false)}
         {...rest}
       />
-      {
-        /* Show tooltip on hover and focus states as a supplemental
-      reminder to icon's meaning */
-        ref.current && hover && (
-          <Drop
-            align={size !== 'small' ? { left: 'right' } : { top: 'bottom' }}
-            target={ref.current}
-            plain
-          >
-            <Box
-              animation={{ type: ['fadeIn', 'slideRight'] }}
-              elevation="small"
-              margin={{ left: 'xsmall', vertical: 'xxsmall' }}
-              pad={{ horizontal: 'xsmall', vertical: 'xxsmall' }}
-              background="blue"
-              round="xsmall"
-            >
-              <Text size="small" color="text-strong">
-                {name}
-              </Text>
-            </Box>
-          </Drop>
-        )
-      }
     </Box>
   );
 };

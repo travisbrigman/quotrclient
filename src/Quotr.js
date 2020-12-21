@@ -1,6 +1,4 @@
-
 import { Route, Redirect } from "react-router-dom";
-import { App } from "./App";
 import { Login } from "./components/auth/Login";
 import { Register } from "./components/auth/Register";
 import { AppRoot } from "./components/Structure/AppRoot";
@@ -20,7 +18,6 @@ return (
           if (localStorage.getItem("quotr_user_id")) {
             return (
               <>
-                {/* <Route render={(props) => <App {...props} />} /> */}
                 <Route render={(props) => <AppRoot {...props} />} />
               </>
             );

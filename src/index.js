@@ -8,11 +8,11 @@ import { Quotr } from "./Quotr.js";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Grommet theme={theme} full>
+    <Grommet theme={theme} full>
+      <Router>
         <Quotr />
-      </Grommet>
-    </Router>
+      </Router>
+    </Grommet>
   </React.StrictMode>,
   document.getElementById("root")
 );

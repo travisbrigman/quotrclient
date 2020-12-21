@@ -54,7 +54,6 @@ export const PartsCatalog = (props) => {
   return (
     <Box pad="large">
       <Box direction="column" pad="small">
-        <Heading>Catalog</Heading>
 
         <DataTable
           columns={[

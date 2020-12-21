@@ -106,7 +106,6 @@ export const Proposals = () => {
         constructNewProposal={constructNewProposal}
       />
       <EditLineItem open={openEditModal} setOpen={setOpenEditModal} editLineItem={editLineItem} />
-      <Heading>Proposals</Heading>
       <Box direction="row">
         {open && (
           <Box pad="large">
