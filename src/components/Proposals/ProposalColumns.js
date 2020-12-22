@@ -1,13 +1,13 @@
-// const amountFormatter = new Intl.NumberFormat('en-US', {
-//     style: 'currency',
-//     currency: 'USD',
-//     // minimumFractionDigits: 2,
-//   })
+const amountFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  })
 
 export const columns = [
     {
-      property: 'item.indexOf()',
-    //   render: datum => datum.keys(item),
+      property: 'datum',
+    //   render: 
       header: 'Line Item',
       aggregate: "sum",
       footer: {"aggregate": true},
@@ -29,7 +29,7 @@ export const columns = [
     {
       property: 'item.cost',
       header: 'cost',
-    //   render: datum => amountFormatter.format(datum.cost),
+      render: datum => amountFormatter.format(datum.item.cost),
       aggregate: 'sum',
       footer: {"aggregate": true},
       size: "xsmall"

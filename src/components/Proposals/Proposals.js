@@ -96,8 +96,6 @@ export const Proposals = () => {
 
   };
 
-  console.log(checked);
-  
   return (
     <Box direction="column">
       <AddCustomerToProposal
@@ -175,45 +173,25 @@ export const Proposals = () => {
         )}
         <Box pad="large">
             <DataTable
-            columns={customerColumns }
+            columns={[...customerColumns,{render:(datum) => (<Menu key={datum.id}
+                icon={<More />}
+                hoverIndicator
+                items={[
+                  {
+                    label: "show",
+                    onClick: () => {
+                      displayProposal(datum.id);
+                    },
+                  },
+                  {
+                    label: "delete",
+                    onClick: () => {
+                      deleteSingleProposal(datum.id);
+                    },
+                  },
+                ]}/>)}] }
             data={proposals} />
-          <List
-            data={proposals}
-            primaryKey={(item) =>
-              item.customer !== null
-                ? item.customer.organization
-                : "no customer"
-            }
-            secondaryKey={(item) =>
-              item.customer !== null
-                ? (item.customer.first_name, item.customer.last_name)
-                : ""
-            }
-            pad={{ left: "small", right: "none" }}
-            action={(item, index) => {
-              return (
-                <Menu
-                  key={index}
-                  icon={<More />}
-                  hoverIndicator
-                  items={[
-                    {
-                      label: "show",
-                      onClick: () => {
-                        displayProposal(item.id);
-                      },
-                    },
-                    {
-                      label: "delete",
-                      onClick: () => {
-                        deleteSingleProposal(item.id);
-                      },
-                    },
-                  ]}
-                />
-              );
-            }}
-          />
+          
         </Box>
       </Box>
 

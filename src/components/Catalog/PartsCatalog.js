@@ -1,9 +1,10 @@
-import { Box, Button, CheckBox, DataTable, Heading } from "grommet";
+import { Box, Button, CheckBox, DataTable, Heading, Text } from "grommet";
 import { Compliance } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
 import { columns } from "./CatalogColumns.js";
 import { ProposalContext } from "../Proposals/ProposalProvider.js";
+import { QuantityPopup } from "./QuantityPopup.js";
 
 const controlledColumns = columns.map((col) => ({ ...col }));
 
@@ -21,6 +22,9 @@ export const PartsCatalog = (props) => {
   const { singleProposal } = useContext(ProposalContext);
 
   const [filteredItems, setFiltered] = useState([]);
+
+  const [viewQuantityPopup , setViewQuantityPopup] = useState(false)
+  const [quant, setQuant] = useState(0)
 
   useEffect(() => {
     if (searchTerms !== "") {
@@ -50,10 +54,25 @@ export const PartsCatalog = (props) => {
     getItems();
   }, []);
 
+  const quantityMultiplier = (array, quantity) => {
+    var newArray = []
+    for (let iteration = 0; iteration < quantity; iteration++) {
+      
+    array.map(item => newArray.push(item))
+  
+  }
+    newArray.sort(function(a, b){return a-b});
+    return newArray
+  }
+
+
+  let checkedWithQuantity = quantityMultiplier(checked, quant)
+
   let itemsApproved = 0;
 
   const approvedChecked = () => {
-    checked.forEach((selectedItems) => {
+
+    checkedWithQuantity.forEach((selectedItems) => {
       addItemToProposal({
         item_id: selectedItems,
         proposal_id: singleProposal.id,
@@ -66,6 +85,7 @@ export const PartsCatalog = (props) => {
 
   return (
     <Box pad="large">
+        <QuantityPopup viewQuantityPopup={viewQuantityPopup} setViewQuantityPopup={setViewQuantityPopup} quant={quant} setQuant={setQuant} approvedChecked={approvedChecked}/>
       <Box direction="column" pad="small">
         <Box width="small">
           <Button
@@ -73,7 +93,8 @@ export const PartsCatalog = (props) => {
             label="Add to Proposal"
             icon={<Compliance />}
             onClick={() => {
-              approvedChecked();
+                setViewQuantityPopup(true)
+            //   approvedChecked();
             }}
             margin="small"
           />
@@ -107,6 +128,29 @@ export const PartsCatalog = (props) => {
           sortable
           resizeable
           size="medium"
+          placeholder={
+            <Box
+              fill
+              align="center"
+              justify="center"
+              direction="row"
+              pad="large"
+              gap="small"
+              background={{ color: 'background-front', opacity: 'strong' }}
+            >
+              <Box
+                direction="row"
+                border={[
+                  { side: 'all', color: 'transparent', size: 'medium' },
+                  { side: 'horizontal', color: 'brand', size: 'medium' },
+                ]}
+                pad="small"
+                round="full"
+                animation={{ type: 'rotateRight', duration: 1500 }}
+              />
+              <Text weight="bold">Loading ...</Text>
+            </Box>
+          }
         />
       </Box>
     </Box>

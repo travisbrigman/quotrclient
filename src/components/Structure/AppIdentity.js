@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Text } from "grommet";
+import { Box, Button, Heading, Text } from "grommet";
 import { Edit } from "grommet-icons";
 import { PropTypes } from "prop-types";
 
@@ -7,7 +7,7 @@ export const AppIdentity = ({ name }) => (
   <Button>
     <Box
       direction="row"
-      align="start"
+      align="center"
       gap="medium"
       // pad maintains accessible hit target
       // non-responsive maintains same dimensions for mobile
@@ -15,10 +15,10 @@ export const AppIdentity = ({ name }) => (
       responsive={false}
     >
       <Edit color="brand" />
-      <Box direction="row" gap="xsmall" wrap>
-        <Text color="text-strong" weight="bold">
+      <Box direction="row" gap="xsmall" wrap align="baseline">
+        <Heading level="4" color="text-strong" weight="bold">
           Quotr
-        </Text>
+        </Heading>
         <Text color="text-strong">{name}</Text>
       </Box>
     </Box>
