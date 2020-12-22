@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { pages } from './Pages';
 
 export const NavButton = ({ active, icon, name, label, ...rest }) => {
-  const [hover, setHover] = useState();
   const ref = useRef();
   const size = useContext(ResponsiveContext);
 
@@ -14,10 +13,6 @@ export const NavButton = ({ active, icon, name, label, ...rest }) => {
         ref={ref}
         icon={icon}
         label={label}
-        onMouseOver={() => setHover(true)}
-        onFocus={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
-        onBlur={() => setHover(false)}
         {...rest}
       />
     </Box>

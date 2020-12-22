@@ -4,6 +4,7 @@ import { AppIdentity } from "./AppIdentity";
 import { Box, Header, Heading } from "grommet";
 import { PropTypes } from "prop-types";
 import { PartsCatalog } from "../Catalog/PartsCatalog";
+import { SearchBar } from "../Catalog/SearchBar"
 import { Proposals } from "../Proposals/Proposals";
 import { Users } from "../Users/Users";
 import { Customers } from "../Customers/Customers";

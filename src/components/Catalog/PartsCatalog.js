@@ -1,6 +1,6 @@
 import { Box, Button, CheckBox, DataTable, Heading } from "grommet";
 import { Compliance } from "grommet-icons";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
 import { columns } from "./CatalogColumns.js";
 import { ProposalContext } from "../Proposals/ProposalProvider.js";
@@ -15,9 +15,25 @@ export const PartsCatalog = (props) => {
     checked,
     setChecked,
     status,
-    setStatus
+    setStatus,
+    searchTerms,
   } = useContext(CatalogContext);
   const { singleProposal } = useContext(ProposalContext);
+
+  const [filteredItems, setFiltered] = useState([]);
+
+  useEffect(() => {
+    if (searchTerms !== "") {
+      // If the search field is not blank, display matching items
+      const subsetMake = items.filter((item) =>
+        item.make.toLowerCase().includes(searchTerms.toLowerCase())
+      );
+      setFiltered(subsetMake);
+    } else {
+      // If the search field is blank, display all animals
+      setFiltered(items);
+    }
+  }, [searchTerms, items]);
 
   const onCheck = (event, value) => {
     if (event.target.checked) {
@@ -34,30 +50,38 @@ export const PartsCatalog = (props) => {
     getItems();
   }, []);
 
-  let itemsApproved = 0
-  
-  
+  let itemsApproved = 0;
+
   const approvedChecked = () => {
-      checked.forEach((selectedItems) => {
-          addItemToProposal({
-              item_id: selectedItems,
-              proposal_id: singleProposal.id,
-            })
-            itemsApproved++
-            // .then(setStatus(false))
-        }
-        )
-        setChecked([]);
-    };
-    
-    console.log(itemsApproved);
+    checked.forEach((selectedItems) => {
+      addItemToProposal({
+        item_id: selectedItems,
+        proposal_id: singleProposal.id,
+      }).then(console.log(status));
+
+      // .then(setStatus(false))
+    });
+    setChecked([]);
+  };
+
   return (
     <Box pad="large">
       <Box direction="column" pad="small">
-
+        <Box width="small">
+          <Button
+            primary
+            label="Add to Proposal"
+            icon={<Compliance />}
+            onClick={() => {
+              approvedChecked();
+            }}
+            margin="small"
+          />
+        </Box>
         <DataTable
           columns={[
             {
+              size: "40px",
               property: "checkbox",
               render: (datum) => (
                 <CheckBox
@@ -79,32 +103,12 @@ export const PartsCatalog = (props) => {
             },
             ...controlledColumns,
           ].map((col) => ({ ...col }))}
-          data={items}
+          data={filteredItems}
           sortable
-          size="small"
-        />
-        <Button
-          primary
-          label="Add to Proposal"
-          icon={<Compliance />}
-          onClick={() => {
-            approvedChecked();
-          }}
-          margin="small"
+          resizeable
+          size="medium"
         />
       </Box>
     </Box>
   );
 };
-
-{
-  /* <Grid columns={size !== "small" ? "small" : "100%"} gap="small">
-<InfiniteScroll items={items} {...props}>
-  {(item) => (
-    <Card pad="large" key={item.id}>
-      {item.id}
-    </Card>
-  )}
-</InfiniteScroll>
-</Grid> */
-}

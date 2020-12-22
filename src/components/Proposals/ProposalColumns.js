@@ -6,7 +6,8 @@
 
 export const columns = [
     {
-      property: 'item.id',
+      property: 'item.indexOf()',
+    //   render: datum => datum.keys(item),
       header: 'Line Item',
       aggregate: "sum",
       footer: {"aggregate": true},
@@ -38,4 +39,19 @@ export const columns = [
       header: 'margin',
       size: "xsmall"
     }
+]
+
+export const customerColumns =[
+    {
+        property:"customer.first_name",
+        header:"First Name"
+    },
+    {
+        property:"customer.last_name",
+        header:"Last Name"
+    },
+    {
+        property:"customer.organization",
+        header:"Organization"
+    },
 ]

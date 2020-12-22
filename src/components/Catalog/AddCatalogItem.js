@@ -6,10 +6,12 @@ import {
   Layer,
   TextInput,
   TextArea,
+  Menu,
 } from "grommet";
-import { Add, Close, Edit } from "grommet-icons";
+import { Add, Close, Edit, New } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
+import { SelectToEdit } from "./SelectToEdit.js";
 import { SingleEditPopUp } from "./SingleEditPopup.js";
 
 export const AddCatalogItem = (props) => {
@@ -38,10 +40,13 @@ export const AddCatalogItem = (props) => {
   const onOpen = () => setOpen(true);
 
   const [viewSingleEdit, setViewSingleEdit] = useState(false);
+  const [viewSelectToEdit, setViewSelectToEdit] = useState(false);
 
   useEffect(() => {
     if (editMode) {
-      getSingleItem(checked[0]).then(setState);
+      if (checked.length !== 0) {
+        getSingleItem(checked[0]).then(setState);
+      }
     }
   }, [checked, editMode]);
 
@@ -69,26 +74,49 @@ export const AddCatalogItem = (props) => {
         .then(getItems);
       setEditMode(false);
     } else {
-      createItem(state)
+      createItem(state);
     }
     onClose();
     setState({ created_on: jsonDate });
   };
 
-  return (
-    <>
-      <Button icon={<Add />} label="Add" onClick={onOpen} />
-      <Button
-        icon={<Edit />}
-        label="Edit"
-        onClick={() => {
-          setEditMode(true);
+  const actionItems = [
+    {
+      label: <Box alignSelf="center">New</Box>,
+      onClick: onOpen,
+      icon: (
+        <Box pad="medium">
+          <New size="small" />
+        </Box>
+      ),
+    },
+    {
+      label: <Box alignSelf="center">Edit</Box>,
+      onClick: () => {
+        setEditMode(true);
+        if (checked.length === 0) {
+          setViewSelectToEdit(true);
+        } else {
           onOpen();
           if (checked.length > 1) {
             setViewSingleEdit(true);
           }
-        }}
-      />
+        }
+      },
+      icon: (
+        <Box pad="medium">
+          <Edit size="small" />
+        </Box>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <Box width="xsmall" size="xsmall" alignSelf="end">
+        <Menu label="Actions" items={actionItems} />
+      </Box>
+
       <Box align="end" justify="center" pad="small">
         {open && (
           <Layer
@@ -161,6 +189,10 @@ export const AddCatalogItem = (props) => {
       <SingleEditPopUp
         viewSingleEdit={viewSingleEdit}
         setViewSingleEdit={setViewSingleEdit}
+      />
+      <SelectToEdit
+        viewSelectToEdit={viewSelectToEdit}
+        setViewSelectToEdit={setViewSelectToEdit}
       />
     </>
   );

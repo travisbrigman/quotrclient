@@ -1,6 +1,7 @@
 import { Link, Route, Switch, useHistory } from "react-router-dom";
 import { Anchor, Box, Button, Heading, ResponsiveContext } from "grommet";
-import { ModalContext, PartsCatalog } from "./components/Catalog/PartsCatalog";
+import { PartsCatalog } from "./components/Catalog/PartsCatalog";
+import { SearchBar } from "./components/Catalog/SearchBar"
 import { Proposals } from "./components/Proposals/Proposals";
 import { Logout } from "grommet-icons";
 import AppHeader from "./components/AppHeader/AppHeader";
@@ -66,7 +67,8 @@ export const App = () => {
                           path="/catalog"
                           render={(props, size) => (
                             <Box direction="column">
-                              <AddCatalogItem />
+                              {/* <AddCatalogItem /> */}
+                              <SearchBar />
                               <PartsCatalog {...props} />
                             </Box>
                           )}

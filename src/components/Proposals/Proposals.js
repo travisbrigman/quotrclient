@@ -11,7 +11,7 @@ import {
 import { More } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { ProposalContext } from "./ProposalProvider";
-import { columns } from "./ProposalColumns";
+import { columns, customerColumns } from "./ProposalColumns";
 import { AddCustomerToProposal } from "./AddCustToNewProposal";
 import { EditLineItem } from "./EditLineItem";
 import { CatalogContext } from "../Catalog/CatalogProvider";
@@ -174,6 +174,9 @@ export const Proposals = () => {
           </Box>
         )}
         <Box pad="large">
+            <DataTable
+            columns={customerColumns }
+            data={proposals} />
           <List
             data={proposals}
             primaryKey={(item) =>

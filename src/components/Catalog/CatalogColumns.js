@@ -2,10 +2,13 @@ export const columns = [
     {
       property: 'make',
       header: 'Manufacturer',
+      search: true,
+      align: "start"
     },
     {
       property: 'model',
       header: 'Part #',
+      search: true
     },
     {
       property: 'cost',
@@ -13,7 +16,8 @@ export const columns = [
     },
     {
       property: 'description',
-      header: 'Short Description'
+      header: 'Short Description',
+      search: true
     },
     {
       property: 'created_on',
