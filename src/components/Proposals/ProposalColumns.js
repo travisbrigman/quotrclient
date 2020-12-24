@@ -22,7 +22,7 @@ const marginValueChecker = (marginValue) => {
 export const columns = [
     {
       property: 'datum',
-      render: datum => console.log(datum),
+      render: (datum) => console.log(datum),
       header: 'Line Item',
       aggregate: "sum",
       footer: {"aggregate": true},

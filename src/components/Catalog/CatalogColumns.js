@@ -1,3 +1,23 @@
+
+const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+});
+
+const dateChanger = (dateString) => {
+  let parsedDate = Date.parse(dateString)
+  return dateTimeFormat.format(parsedDate)
+
+}
+
+const amountFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+})
+
+
 export const columns = [
     {
       property: 'make',
@@ -12,6 +32,7 @@ export const columns = [
     },
     {
       property: 'cost',
+      render: datum => amountFormatter.format(datum.cost),
       header: 'Dealer Cost',
     },
     {
@@ -21,6 +42,7 @@ export const columns = [
     },
     {
       property: 'created_on',
+      render: datum => dateChanger(datum.created_on),
       header: 'Date Created'
     }
   ];
