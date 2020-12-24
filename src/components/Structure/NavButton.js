@@ -1,19 +1,18 @@
-import {Box, Button, Drop,Heading, ResponsiveContext, Text} from 'grommet'
-import { useState, useRef, useContext } from 'react'
+import {Box, Button} from 'grommet'
+import { useRef } from 'react'
 import PropTypes from 'prop-types';
-import { pages } from './Pages';
 
 export const NavButton = ({ active, icon, name, label, ...rest }) => {
   const ref = useRef();
-  const size = useContext(ResponsiveContext);
 
   return (
     <Box fill="horizontal">
       <Button
         ref={ref}
         icon={icon}
-        label={label}
+        label={<Box alignContent="end">{label}</Box>}
         {...rest}
+        plain={true}
       />
     </Box>
   );

@@ -1,13 +1,4 @@
-import {
-  Heading,
-  Box,
-  Button,
-  CheckBox,
-  List,
-  Menu,
-  Text,
-  DataTable,
-} from "grommet";
+import { Heading, Box, Button, CheckBox, Menu, Text, DataTable } from "grommet";
 import { More } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { ProposalContext } from "./ProposalProvider";
@@ -27,7 +18,7 @@ export const Proposals = () => {
     createProposal,
   } = useContext(ProposalContext);
 
-  const { patchItem } = useContext(CatalogContext)
+  const { patchItem } = useContext(CatalogContext);
 
   useEffect(() => {
     getProposals();
@@ -81,19 +72,20 @@ export const Proposals = () => {
       deleteProposalItem(checkedLineItemId);
     });
     setChecked([]);
+    getSingleProposal(singleProposal.id);
   };
 
   const editLineItem = (margin) => {
-      checked.forEach(checkedLineItemId => {
-          const matched = singleProposal.items.find(proposalItem => proposalItem.id === checkedLineItemId)
-          const updateObj = { id: matched.item.id, margin: margin };
-          patchItem(updateObj)
-
-      })
-    setOpenEditModal(false)
-    setChecked([])
-    getSingleProposal(singleProposal.id)
-
+    checked.forEach((checkedLineItemId) => {
+      const matched = singleProposal.items.find(
+        (proposalItem) => proposalItem.id === checkedLineItemId
+      );
+      const updateObj = { id: matched.item.id, margin: margin };
+      patchItem(updateObj);
+    });
+    setOpenEditModal(false);
+    setChecked([]);
+    getSingleProposal(singleProposal.id);
   };
 
   return (
@@ -103,8 +95,12 @@ export const Proposals = () => {
         onClose={onClose}
         constructNewProposal={constructNewProposal}
       />
-      <EditLineItem open={openEditModal} setOpen={setOpenEditModal} editLineItem={editLineItem} />
-      <Box direction="row">
+      <EditLineItem
+        open={openEditModal}
+        setOpen={setOpenEditModal}
+        editLineItem={editLineItem}
+      />
+      <Box direction="row" pad="medium" align="start">
         {open && (
           <Box pad="large">
             <Heading level="3">Open Proposal</Heading>
@@ -145,10 +141,10 @@ export const Proposals = () => {
                     ),
                     header: (
                       <CheckBox
-                        checked={checked.length === singleProposal.items.length}
+                        checked={checked.length === singleProposal.proposalitems.length}
                         indeterminate={
-                          checked.length > 0 &&
-                          checked.length < singleProposal.items.length
+                          checked.length > 0 &&    
+                          checked.length < singleProposal.proposalitems.length
                         }
                         onChange={onCheckAll}
                       />
@@ -162,7 +158,7 @@ export const Proposals = () => {
                     col.property === "item.make" ||
                     col.property === "item.model",
                 }))}
-                data={singleProposal.items}
+                data={singleProposal.proposalitems}
                 sortable
                 resizeable
               />
@@ -172,26 +168,35 @@ export const Proposals = () => {
           </Box>
         )}
         <Box pad="large">
-            <DataTable
-            columns={[...customerColumns,{render:(datum) => (<Menu key={datum.id}
-                icon={<More />}
-                hoverIndicator
-                items={[
-                  {
-                    label: "show",
-                    onClick: () => {
-                      displayProposal(datum.id);
-                    },
-                  },
-                  {
-                    label: "delete",
-                    onClick: () => {
-                      deleteSingleProposal(datum.id);
-                    },
-                  },
-                ]}/>)}] }
-            data={proposals} />
-          
+          <DataTable
+            columns={[
+              ...customerColumns,
+              {
+                render: (datum) => (
+                  <Menu
+                    key={datum.id}
+                    icon={<More />}
+                    hoverIndicator
+                    items={[
+                      {
+                        label: "show",
+                        onClick: () => {
+                          displayProposal(datum.id);
+                        },
+                      },
+                      {
+                        label: "delete",
+                        onClick: () => {
+                          deleteSingleProposal(datum.id);
+                        },
+                      },
+                    ]}
+                  />
+                ),
+              },
+            ]}
+            data={proposals}
+          />
         </Box>
       </Box>
 

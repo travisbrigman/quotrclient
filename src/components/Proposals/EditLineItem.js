@@ -5,13 +5,14 @@ import {
   Heading,
   Layer,
   MaskedInput,
+  Text
 } from "grommet";
 
 export const EditLineItem = ({ open, setOpen, editLineItem }) => {
   const [marginValue, setMarginValue] = useState(0);
 
   const handleClick = () => {
-    editLineItem(marginValue);
+    editLineItem((marginValue/100));
     setMarginValue(0)
   };
 
@@ -32,13 +33,14 @@ export const EditLineItem = ({ open, setOpen, editLineItem }) => {
             <Heading margin="xsmall" level="3">
               Set Margin
             </Heading>
-
+          <Box alignSelf="center" direction="row" align="center" gap="xxsmall" width="xsmall">
             <MaskedInput
               name="value"
-              mask={[{ regexp: /^\d{1,3}$/ }]}
+              mask={[{ length: [1,2], regexp: /^\d{1,3}$/, placeholder:'25' }]}
               value={marginValue}
               onChange={(event) => setMarginValue(event.target.value)}
-            />
+            /><Text weight="bold">%</Text>
+            </Box>
 
             <Box direction="row-responsive">
               <Button

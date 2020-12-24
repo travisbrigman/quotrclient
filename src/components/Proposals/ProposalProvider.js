@@ -6,8 +6,12 @@ export const ProposalProvider = (props) => {
   const [proposals, setProposals] = useState([]);
   const [singleProposal, setSingleProposal] = useState({
     customer: { organization: "" },
-    items: [],
+    proposalitems: [],
   });
+
+  let objCheck = Object.entries(singleProposal).length === 0 && singleProposal.constructor === Object
+  console.log(objCheck);
+  
 
   const getProposals = () => {
     return fetch("http://127.0.0.1:8000/proposals", {

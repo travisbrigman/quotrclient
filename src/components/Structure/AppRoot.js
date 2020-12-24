@@ -6,7 +6,7 @@ import { PageContent } from "./PageContent";
 import { CatalogProvider } from "../Catalog/CatalogProvider";
 import { ProposalProvider } from "../Proposals/ProposalProvider";
 import { CustomerProvider } from "../Customers/CustomerProvider";
-import { SidebarHeader } from "./UserAvatar";
+import { UserAvatar } from "./UserAvatar";
 import { UserProvider } from "../Users/UserProvider";
 
 export const AppRoot = () => {
@@ -14,7 +14,7 @@ export const AppRoot = () => {
   const size = useContext(ResponsiveContext);
 
   return (
-    <AppContainer activeItem={activeItem}>
+    <AppContainer activeItem={activeItem} >
       <UserProvider>
         <Sidebar
           /* Sidebar should switch from column to row orientation 
@@ -22,7 +22,7 @@ export const AppRoot = () => {
           direction={size !== "small" ? "column" : "row"}
           /* Only display most critical navigation items in mobile 
         contexts */
-          footer={size !== "small" && <SidebarHeader />}
+          footer={size !== "small" && <UserAvatar setActiveItem={setActiveItem} />}
           /* Min height is not needed in mobile contexts */
           height={size !== "small" ? { min: "100%" } : undefined}
           align="center"

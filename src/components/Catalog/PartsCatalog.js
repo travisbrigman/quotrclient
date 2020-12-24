@@ -1,4 +1,4 @@
-import { Box, Button, CheckBox, DataTable, Heading, Text } from "grommet";
+import { Box, Button, CheckBox, DataTable, Text } from "grommet";
 import { Compliance } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
@@ -16,15 +16,14 @@ export const PartsCatalog = (props) => {
     checked,
     setChecked,
     status,
-    setStatus,
     searchTerms,
   } = useContext(CatalogContext);
   const { singleProposal } = useContext(ProposalContext);
 
   const [filteredItems, setFiltered] = useState([]);
 
-  const [viewQuantityPopup , setViewQuantityPopup] = useState(false)
-  const [quant, setQuant] = useState(0)
+  const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
+  const [quant, setQuant] = useState(0);
 
   useEffect(() => {
     if (searchTerms !== "") {
@@ -55,23 +54,21 @@ export const PartsCatalog = (props) => {
   }, []);
 
   const quantityMultiplier = (array, quantity) => {
-    var newArray = []
+    var newArray = [];
     for (let iteration = 0; iteration < quantity; iteration++) {
-      
-    array.map(item => newArray.push(item))
-  
-  }
-    newArray.sort(function(a, b){return a-b});
-    return newArray
-  }
+      array.map((item) => newArray.push(item));
+    }
+    newArray.sort(function (a, b) {
+      return a - b;
+    });
+    return newArray;
+  };
 
-
-  let checkedWithQuantity = quantityMultiplier(checked, quant)
+  let checkedWithQuantity = quantityMultiplier(checked, quant);
 
   let itemsApproved = 0;
 
   const approvedChecked = () => {
-
     checkedWithQuantity.forEach((selectedItems) => {
       addItemToProposal({
         item_id: selectedItems,
@@ -85,7 +82,13 @@ export const PartsCatalog = (props) => {
 
   return (
     <Box pad="large">
-        <QuantityPopup viewQuantityPopup={viewQuantityPopup} setViewQuantityPopup={setViewQuantityPopup} quant={quant} setQuant={setQuant} approvedChecked={approvedChecked}/>
+      <QuantityPopup
+        viewQuantityPopup={viewQuantityPopup}
+        setViewQuantityPopup={setViewQuantityPopup}
+        quant={quant}
+        setQuant={setQuant}
+        approvedChecked={approvedChecked}
+      />
       <Box direction="column" pad="small">
         <Box width="small">
           <Button
@@ -93,8 +96,8 @@ export const PartsCatalog = (props) => {
             label="Add to Proposal"
             icon={<Compliance />}
             onClick={() => {
-                setViewQuantityPopup(true)
-            //   approvedChecked();
+              setViewQuantityPopup(true);
+              //   approvedChecked();
             }}
             margin="small"
           />
@@ -102,7 +105,7 @@ export const PartsCatalog = (props) => {
         <DataTable
           columns={[
             {
-              size: "40px",
+            //   size: "40px",
               property: "checkbox",
               render: (datum) => (
                 <CheckBox
@@ -136,17 +139,17 @@ export const PartsCatalog = (props) => {
               direction="row"
               pad="large"
               gap="small"
-              background={{ color: 'background-front', opacity: 'strong' }}
+              background={{ color: "background-front", opacity: "strong" }}
             >
               <Box
                 direction="row"
                 border={[
-                  { side: 'all', color: 'transparent', size: 'medium' },
-                  { side: 'horizontal', color: 'brand', size: 'medium' },
+                  { side: "all", color: "transparent", size: "medium" },
+                  { side: "horizontal", color: "brand", size: "medium" },
                 ]}
                 pad="small"
                 round="full"
-                animation={{ type: 'rotateRight', duration: 1500 }}
+                animation={{ type: "rotateRight", duration: 1500 }}
               />
               <Text weight="bold">Loading ...</Text>
             </Box>

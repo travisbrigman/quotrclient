@@ -22,4 +22,8 @@ export const pages = [
     icon: <Group />,
     path: '/customers',
   },
+  {
+    name: 'Users',
+    path: '/users',
+  }
 ];

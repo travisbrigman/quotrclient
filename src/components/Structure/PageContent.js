@@ -1,19 +1,19 @@
 import React from "react";
 import { pages } from "./Pages";
 import { AppIdentity } from "./AppIdentity";
-import { Box, Header, Heading } from "grommet";
+import { Box, Button, Header, Heading } from "grommet";
+import { Logout } from "grommet-icons";
 import { PropTypes } from "prop-types";
 import { PartsCatalog } from "../Catalog/PartsCatalog";
-import { SearchBar } from "../Catalog/SearchBar"
 import { Proposals } from "../Proposals/Proposals";
 import { Users } from "../Users/Users";
 import { Customers } from "../Customers/Customers";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import { AddCatalogItem } from "../Catalog/AddCatalogItem";
 
 export const PageContent = ({ activeItem }) => {
-  const { content, name } = pages[activeItem];
-  // const items = new Array(9).fill(); // Mock data
+  const { name } = pages[activeItem];
+  const history = useHistory();
 
   return (
     pages && (
@@ -24,6 +24,17 @@ export const PageContent = ({ activeItem }) => {
           pad={{ horizontal: "medium" }}
         >
           <AppIdentity name={name} />
+          {localStorage.getItem("quotr_user_id") != null ? (
+            <Box alignSelf="baseline">
+              <Button
+                icon={<Logout />}
+                onClick={() => {
+                  localStorage.removeItem("quotr_user_id");
+                  history.push({ pathname: "/login" });
+                }}
+              />
+            </Box>
+          ) : null}
         </Header>
         <Box pad={{ horizontal: "medium", bottom: "large" }} flex="grow">
           <Heading level={2} margin={{ vertical: "small" }}>

@@ -1,6 +1,5 @@
 import {Box, Button, Layer, Text, MaskedInput } from "grommet"
-import { FormClose, Send, StatusGood} from "grommet-icons"
-import { useState } from "react"
+import { FormClose, Send} from "grommet-icons"
 
 export const QuantityPopup = ({viewQuantityPopup, setViewQuantityPopup, quant, setQuant, approvedChecked }) => {
 

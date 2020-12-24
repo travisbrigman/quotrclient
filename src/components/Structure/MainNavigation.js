@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export const MainNavigation = ({ activeItem, setActiveItem }, props) => {
   const size = useContext(ResponsiveContext);
-  const maxItems = size !== "small" ? undefined : 4;
+  const maxItems = size !== "small" ? undefined : 3;
 
   return (
     <Nav direction={size !== "small" ? "column" : "row"}>
@@ -17,7 +17,8 @@ export const MainNavigation = ({ activeItem, setActiveItem }, props) => {
             key={index}
             as={({ colorProp, hasIcon, hasLabel, focus, ...p }) => <Link {...p} />}
             {...props}
-           to={item.path}>
+            to={item.path}>
+              {item.path !== '/users' ?
             <NavButton
               key={item.name}
               a11yTitle={item.name}
@@ -27,7 +28,7 @@ export const MainNavigation = ({ activeItem, setActiveItem }, props) => {
               label={item.name}
               onClick={() => setActiveItem(index)}
               round="xsmall"
-            />
+            /> : null}
           </Anchor>
         ))}
     </Nav>

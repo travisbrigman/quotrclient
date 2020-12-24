@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Button, Heading, Text } from "grommet";
+import { Box, Heading, Text } from "grommet";
 import { Edit } from "grommet-icons";
 import { PropTypes } from "prop-types";
 
-export const AppIdentity = ({ name }) => (
-  <Button>
+export const AppIdentity = ({ name }) => {
+  return (
     <Box
       direction="row"
       align="center"
@@ -22,9 +22,8 @@ export const AppIdentity = ({ name }) => (
         <Text color="text-strong">{name}</Text>
       </Box>
     </Box>
-  </Button>
-);
-
+  );
+};
 AppIdentity.propTypes = {
-  name: PropTypes.string
+  name: PropTypes.string,
 };
