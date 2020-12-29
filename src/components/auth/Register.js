@@ -22,7 +22,7 @@ export const Register = (props) => {
                 "username": userName.current.value,
                 "email" : email.current.value,
                 "password": password.current.value,
-                "profile_image_url": ""
+                "profile_image": ""
             }
             return fetch("http://localhost:8000/register", {
                 method: "POST",

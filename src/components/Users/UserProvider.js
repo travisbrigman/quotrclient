@@ -27,6 +27,17 @@ export const UserProvider = (props) => {
         .then(setCurrentUser)    
 }
 
+const patchUser = (userObject) => {
+  return fetch(`http://localhost:8000/users/${userObject.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+    },
+    body: JSON.stringify(userObject),
+  }).then(getCurrentUser);
+};
+
   return (
     <UserContext.Provider
       value={{
@@ -34,7 +45,8 @@ export const UserProvider = (props) => {
         users,
         setUsers,
         getCurrentUser,
-        currentUser
+        currentUser,
+        patchUser
       }}
     >
       {props.children}

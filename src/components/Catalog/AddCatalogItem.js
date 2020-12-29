@@ -50,12 +50,35 @@ export const AddCatalogItem = (props) => {
     }
   }, [checked, editMode]);
 
-  function handleChange(evt) {
-    const value = evt.target.value;
-    setState({
-      ...state,
-      [evt.target.name]: value,
+  const getBase64 = (file, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(file);
+  };
+
+  const createItemImageString = (event) => {
+    getBase64(event.target.files[0], (base64ImageString) => {
+      setState({
+        ...state,
+        [event.target.name]: base64ImageString,
+      });
     });
+  };
+
+  function handleChange(evt) {
+    if (evt.target.type === "file") {
+      createItemImageString(evt);
+    } else if (evt.target.type === "number") {
+      setState({
+        ...state,
+        [evt.target.name]: parseFloat(evt.target.value),
+      });
+    } else {
+        setState({
+          ...state,
+          [evt.target.name]: evt.target.value,
+        });
+    }
   }
 
   const handleClick = () => {
@@ -67,7 +90,7 @@ export const AddCatalogItem = (props) => {
         cost: state.cost,
         margin: state.margin,
         description: state.description,
-        image_url: state.image_url,
+        image_path: state.image_path,
         created_on: jsonDate,
       })
         .then(setChecked([]))
@@ -151,6 +174,7 @@ export const AddCatalogItem = (props) => {
                   </FormField>
                   <FormField label="Cost">
                     <TextInput
+                      type="number"
                       name="cost"
                       value={state.cost}
                       onChange={handleChange}
@@ -158,6 +182,7 @@ export const AddCatalogItem = (props) => {
                   </FormField>
                   <FormField label="Margin">
                     <TextInput
+                      type="number"
                       name="margin"
                       value={state.margin}
                       onChange={handleChange}
@@ -172,11 +197,18 @@ export const AddCatalogItem = (props) => {
                   />
                 </FormField>
                 <FormField label="Image">
-                  <TextInput
-                    name="image_url"
-                    value={state.image_url}
+                  <input
+                    type="file"
+                    name="image_path"
+                    id="item_image"
+                    value={state.image_path}
                     onChange={handleChange}
                   />
+                  {/* <TextInput
+                    name="image_path"
+                    value={state.image_url}
+                    onChange={handleChange}
+                  /> */}
                 </FormField>
               </Box>
               <Box flex={false} as="footer" align="start">

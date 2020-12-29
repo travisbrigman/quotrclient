@@ -10,6 +10,7 @@ import { Users } from "../Users/Users";
 import { Customers } from "../Customers/Customers";
 import { Route, Switch, useHistory } from "react-router-dom";
 import { AddCatalogItem } from "../Catalog/AddCatalogItem";
+import { CustomerProposal } from "../Proposals/CustomerProposal";
 
 export const PageContent = ({ activeItem }) => {
   const { name } = pages[activeItem];
@@ -65,6 +66,11 @@ export const PageContent = ({ activeItem }) => {
               exact
               path="/users"
               render={(props, size) => <Users {...props} />}
+            />
+            <Route
+              exact
+              path="/export"
+              render={(props) => <CustomerProposal {...props} />}
             />
           </Switch>
         </Box>

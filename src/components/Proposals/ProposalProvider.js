@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, createRef, useState } from "react";
 
 export const ProposalContext = createContext();
 
@@ -9,9 +9,7 @@ export const ProposalProvider = (props) => {
     proposalitems: [],
   });
 
-  let objCheck = Object.entries(singleProposal).length === 0 && singleProposal.constructor === Object
-  console.log(objCheck);
-  
+  const PdfRef = createRef();
 
   const getProposals = () => {
     return fetch("http://127.0.0.1:8000/proposals", {
@@ -78,6 +76,7 @@ export const ProposalProvider = (props) => {
         deleteProposal,
         deleteProposalItem,
         createProposal,
+        PdfRef
       }}
     >
       {props.children}

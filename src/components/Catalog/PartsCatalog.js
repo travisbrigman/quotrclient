@@ -66,8 +66,6 @@ export const PartsCatalog = (props) => {
 
   let checkedWithQuantity = quantityMultiplier(checked, quant);
 
-  let itemsApproved = 0;
-
   const approvedChecked = () => {
     checkedWithQuantity.forEach((selectedItems) => {
       addItemToProposal({

@@ -10,7 +10,6 @@ export const CatalogProvider = (props) => {
   const [searchTerms, setTerms ] = useState('')
   const [valueMultiple, setValueMultiple] = useState([]);
  
-  console.log(searchTerms)
 
   const getItems = () => {
     return fetch("http://127.0.0.1:8000/items", {

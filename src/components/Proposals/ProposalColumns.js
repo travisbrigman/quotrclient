@@ -20,14 +20,14 @@ const marginValueChecker = (marginValue) => {
 }
 
 export const columns = [
-    {
-      property: 'datum',
-      render: (datum) => console.log(datum),
-      header: 'Line Item',
-      aggregate: "sum",
-      footer: {"aggregate": true},
-      primary: true,
-    },
+    // {
+    //   property: 'index',
+    //   render: (datum) => console.log(datum),
+    //   header: 'Line Item',
+    //   aggregate: "sum",
+    //   footer: {"aggregate": true},
+    //   primary: true,
+    // },
     {
       property: 'item.make',
       header: 'Manufacturer',
@@ -38,23 +38,45 @@ export const columns = [
     },
     {
       property: 'item.description',
-      header: 'description',
+      header: 'Description',
     },
     {
       property: 'item.cost',
-      header: 'cost',
+      header: 'Cost',
       render: datum => amountFormatter.format(datum.item.cost),
       aggregate: 'sum',
       footer: {"aggregate": true},
     },
     {
       property: 'item.margin',
-      header: 'margin',
+      header: 'Margin',
       render: datum => marginValueChecker(datum.item.margin)
     },
     {
         property: 'item.sell_price',
-        header: 'price',
+        header: 'Price',
+        render: datum => amountFormatter.format(datum.item.sell_price),
+        aggregate: 'sum',
+        footer: {'aggregate': true}
+    }
+]
+
+export const exportColumns = [
+    {
+      property: 'item.make',
+      header: 'Manufacturer',
+    },
+    {
+      property: 'item.model',
+      header: 'Part Number',
+    },
+    {
+      property: 'item.description',
+      header: 'Description',
+    },
+    {
+        property: 'item.sell_price',
+        header: 'Price',
         render: datum => amountFormatter.format(datum.item.sell_price),
         aggregate: 'sum',
         footer: {'aggregate': true}

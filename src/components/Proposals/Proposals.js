@@ -1,11 +1,12 @@
 import { Heading, Box, Button, CheckBox, Menu, Text, DataTable } from "grommet";
 import { More } from "grommet-icons";
-import { useContext, useEffect, useState } from "react";
+import { createRef, useContext, useEffect, useState } from "react";
 import { ProposalContext } from "./ProposalProvider";
 import { columns, customerColumns } from "./ProposalColumns";
 import { AddCustomerToProposal } from "./AddCustToNewProposal";
 import { EditLineItem } from "./EditLineItem";
 import { CatalogContext } from "../Catalog/CatalogProvider";
+import Pdf from "react-to-pdf";
 
 export const Proposals = () => {
   const {
@@ -16,6 +17,7 @@ export const Proposals = () => {
     deleteProposal,
     deleteProposalItem,
     createProposal,
+    PdfRef
   } = useContext(ProposalContext);
 
   const { patchItem } = useContext(CatalogContext);
@@ -104,27 +106,31 @@ export const Proposals = () => {
         {open && (
           <Box pad="large">
             <Heading level="3">Open Proposal</Heading>
-            <Box gap="xsmall" direction="row">
-              <Text color="text-strong" weight="bold">
+            <Pdf targetRef={PdfRef} filename="Proposal-Export.pdf">
+              {({ toPdf }) => <Button onClick={toPdf} label="Generate PDF" primary/>}
+            </Pdf>
+
+            <Box gap="xsmall" direction="row" align="baseline">
+              <Heading level={5} margin="xsmall" color="text-strong" weight="bold">
                 Organization
-              </Text>
+              </Heading>
               <Text color="text-xweak">
                 {singleProposal.customer.organization}
               </Text>
             </Box>
-            <Box gap="xsmall" direction="row">
-              <Text color="text-strong" weight="bold">
+            <Box gap="xsmall" direction="row" align="baseline">
+            <Heading level={5} margin="xsmall" color="text-strong" weight="bold">
                 Contact Name
-              </Text>
+              </Heading>
               <Text color="text-xweak">
                 {singleProposal.customer.first_name}{" "}
                 {singleProposal.customer.last_name}
               </Text>
             </Box>
-            <Box gap="xsmall" direction="row">
-              <Text color="text-strong" weight="bold">
+            <Box gap="xsmall" direction="row" align="baseline">
+            <Heading level={5} margin="xsmall" color="text-strong" weight="bold">
                 Contact Email
-              </Text>
+              </Heading>
               <Text color="text-xweak">{singleProposal.customer.email}</Text>
             </Box>
             <Box margin="small">
@@ -141,15 +147,22 @@ export const Proposals = () => {
                     ),
                     header: (
                       <CheckBox
-                        checked={checked.length === singleProposal.proposalitems.length}
+                        checked={
+                          checked.length === singleProposal.proposalitems.length
+                        }
                         indeterminate={
-                          checked.length > 0 &&    
+                          checked.length > 0 &&
                           checked.length < singleProposal.proposalitems.length
                         }
                         onChange={onCheckAll}
                       />
                     ),
                     sortable: false,
+                  },
+                  {
+                    property: "index",
+                    render: datum => ( singleProposal.proposalitems.findIndex(datum.id)),
+                    header: "Line Item",
                   },
                   ...columns,
                 ].map((col) => ({
@@ -202,5 +215,6 @@ export const Proposals = () => {
 
       <Button label="Start New Proposal" onClick={newProposal} />
     </Box>
+    
   );
 };
