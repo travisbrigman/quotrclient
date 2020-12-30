@@ -8,8 +8,9 @@ export const ProposalProvider = (props) => {
     customer: { organization: "" },
     proposalitems: [],
   });
+  
 
-  const PdfRef = createRef();
+  
 
   const getProposals = () => {
     return fetch("http://127.0.0.1:8000/proposals", {
@@ -76,7 +77,6 @@ export const ProposalProvider = (props) => {
         deleteProposal,
         deleteProposalItem,
         createProposal,
-        PdfRef
       }}
     >
       {props.children}

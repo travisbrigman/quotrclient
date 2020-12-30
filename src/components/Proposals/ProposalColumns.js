@@ -20,14 +20,6 @@ const marginValueChecker = (marginValue) => {
 }
 
 export const columns = [
-    // {
-    //   property: 'index',
-    //   render: (datum) => console.log(datum),
-    //   header: 'Line Item',
-    //   aggregate: "sum",
-    //   footer: {"aggregate": true},
-    //   primary: true,
-    // },
     {
       property: 'item.make',
       header: 'Manufacturer',

@@ -1,12 +1,13 @@
 import { Heading, Box, Button, CheckBox, Menu, Text, DataTable } from "grommet";
 import { More } from "grommet-icons";
-import { createRef, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProposalContext } from "./ProposalProvider";
 import { columns, customerColumns } from "./ProposalColumns";
 import { AddCustomerToProposal } from "./AddCustToNewProposal";
 import { EditLineItem } from "./EditLineItem";
 import { CatalogContext } from "../Catalog/CatalogProvider";
 import Pdf from "react-to-pdf";
+import { Link } from "react-router-dom";
 
 export const Proposals = () => {
   const {
@@ -17,7 +18,6 @@ export const Proposals = () => {
     deleteProposal,
     deleteProposalItem,
     createProposal,
-    PdfRef
   } = useContext(ProposalContext);
 
   const { patchItem } = useContext(CatalogContext);
@@ -106,12 +106,16 @@ export const Proposals = () => {
         {open && (
           <Box pad="large">
             <Heading level="3">Open Proposal</Heading>
-            <Pdf targetRef={PdfRef} filename="Proposal-Export.pdf">
-              {({ toPdf }) => <Button onClick={toPdf} label="Generate PDF" primary/>}
-            </Pdf>
-
+            <Link to="/export">
+              <Button label="Generate PDF" primary />
+            </Link>
             <Box gap="xsmall" direction="row" align="baseline">
-              <Heading level={5} margin="xsmall" color="text-strong" weight="bold">
+              <Heading
+                level={5}
+                margin="xsmall"
+                color="text-strong"
+                weight="bold"
+              >
                 Organization
               </Heading>
               <Text color="text-xweak">
@@ -119,7 +123,12 @@ export const Proposals = () => {
               </Text>
             </Box>
             <Box gap="xsmall" direction="row" align="baseline">
-            <Heading level={5} margin="xsmall" color="text-strong" weight="bold">
+              <Heading
+                level={5}
+                margin="xsmall"
+                color="text-strong"
+                weight="bold"
+              >
                 Contact Name
               </Heading>
               <Text color="text-xweak">
@@ -128,7 +137,12 @@ export const Proposals = () => {
               </Text>
             </Box>
             <Box gap="xsmall" direction="row" align="baseline">
-            <Heading level={5} margin="xsmall" color="text-strong" weight="bold">
+              <Heading
+                level={5}
+                margin="xsmall"
+                color="text-strong"
+                weight="bold"
+              >
                 Contact Email
               </Heading>
               <Text color="text-xweak">{singleProposal.customer.email}</Text>
@@ -161,7 +175,10 @@ export const Proposals = () => {
                   },
                   {
                     property: "index",
-                    render: datum => ( singleProposal.proposalitems.findIndex(datum.id)),
+                    render: (datum) =>
+                      singleProposal.proposalitems.findIndex(
+                        (index) => index.id === datum.id
+                      ) + 1,
                     header: "Line Item",
                   },
                   ...columns,
@@ -215,6 +232,5 @@ export const Proposals = () => {
 
       <Button label="Start New Proposal" onClick={newProposal} />
     </Box>
-    
   );
 };
