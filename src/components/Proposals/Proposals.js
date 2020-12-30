@@ -107,7 +107,7 @@ export const Proposals = () => {
           <Box pad="large">
             <Heading level="3">Open Proposal</Heading>
             <Link to="/export">
-              <Button label="Generate PDF" primary />
+              <Button label="Export Proposal" primary />
             </Link>
             <Box gap="xsmall" direction="row" align="baseline">
               <Heading
