@@ -100,59 +100,61 @@ export const PartsCatalog = (props) => {
             margin="small"
           />
         </Box>
-        <DataTable
-          columns={[
-            {
-            //   size: "40px",
-              property: "checkbox",
-              render: (datum) => (
-                <CheckBox
-                  key={datum.id}
-                  checked={checked.indexOf(datum.id) !== -1}
-                  onChange={(e) => onCheck(e, datum.id)}
-                />
-              ),
-              header: (
-                <CheckBox
-                  checked={checked.length === items.length}
-                  indeterminate={
-                    checked.length > 0 && checked.length < items.length
-                  }
-                  onChange={onCheckAll}
-                />
-              ),
-              sortable: false,
-            },
-            ...controlledColumns,
-          ].map((col) => ({ ...col }))}
-          data={filteredItems}
-          sortable
-          resizeable
-          size="medium"
-          placeholder={
-            <Box
-              fill
-              align="center"
-              justify="center"
-              direction="row"
-              pad="large"
-              gap="small"
-              background={{ color: "background-front", opacity: "strong" }}
-            >
+        <Box elevation="small" wrap={true}>
+          <DataTable
+            columns={[
+              {
+                //   size: "40px",
+                property: "checkbox",
+                render: (datum) => (
+                  <CheckBox
+                    key={datum.id}
+                    checked={checked.indexOf(datum.id) !== -1}
+                    onChange={(e) => onCheck(e, datum.id)}
+                  />
+                ),
+                header: (
+                  <CheckBox
+                    checked={checked.length === items.length}
+                    indeterminate={
+                      checked.length > 0 && checked.length < items.length
+                    }
+                    onChange={onCheckAll}
+                  />
+                ),
+                sortable: false,
+              },
+              ...controlledColumns,
+            ].map((col) => ({ ...col }))}
+            data={filteredItems}
+            sortable
+            resizeable
+            size="medium"
+            placeHolder={
               <Box
+                fill
+                align="center"
+                justify="center"
                 direction="row"
-                border={[
-                  { side: "all", color: "transparent", size: "medium" },
-                  { side: "horizontal", color: "brand", size: "medium" },
-                ]}
-                pad="small"
-                round="full"
-                animation={{ type: "rotateRight", duration: 1500 }}
-              />
-              <Text weight="bold">Loading ...</Text>
-            </Box>
-          }
-        />
+                pad="large"
+                gap="small"
+                background={{ color: "background-front", opacity: "strong" }}
+              >
+                <Box
+                  direction="row"
+                  border={[
+                    { side: "all", color: "transparent", size: "medium" },
+                    { side: "horizontal", color: "brand", size: "medium" },
+                  ]}
+                  pad="small"
+                  round="full"
+                  animation={{ type: "rotateRight", duration: 1500 }}
+                />
+                <Text weight="bold">Loading ...</Text>
+              </Box>
+            }
+          />
+        </Box>
       </Box>
     </Box>
   );

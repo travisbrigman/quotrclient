@@ -79,7 +79,7 @@ export const Proposals = () => {
 
   const editLineItem = (margin) => {
     checked.forEach((checkedLineItemId) => {
-      const matched = singleProposal.items.find(
+      const matched = singleProposal.proposalitems.find(
         (proposalItem) => proposalItem.id === checkedLineItemId
       );
       const updateObj = { id: matched.item.id, margin: margin };

@@ -92,6 +92,17 @@ export const CatalogProvider = (props) => {
     }).then((res) => res.json());
   };
 
+  const deleteCatalogItem = (itemId) => {
+    return fetch(`http://127.0.0.1:8000/items/${itemId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(itemId),
+    }).then(getItems);
+  }
+
   return (
     <CatalogContext.Provider
       value={{
@@ -114,6 +125,7 @@ export const CatalogProvider = (props) => {
         valueMultiple,
         setValueMultiple,
         getItemsByMake,
+        deleteCatalogItem
       }}
     >
       {props.children}
