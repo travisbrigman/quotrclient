@@ -11,6 +11,7 @@ import { Customers } from "../Customers/Customers";
 import { Route, Switch, useHistory } from "react-router-dom";
 import { AddCatalogItem } from "../Catalog/AddCatalogItem";
 import { CustomerProposal } from "../Proposals/CustomerProposal";
+import { PartsCatalogRT } from "../Catalog/PartsCatalogRT";
 
 export const PageContent = ({ activeItem }) => {
   const { name } = pages[activeItem];
@@ -49,6 +50,7 @@ export const PageContent = ({ activeItem }) => {
                 <Box direction="column">
                   <AddCatalogItem />
                   <PartsCatalog {...props} />
+                  <PartsCatalogRT {...props} />
                 </Box>
               )}
             />
