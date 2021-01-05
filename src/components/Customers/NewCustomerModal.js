@@ -47,10 +47,9 @@ export const NewCustomerModal = (
       if (Object.values(customerInfo).length === 0) {
         alert("not all fields filled out!");
       } else {
-        createCustomer(customerInfo);
+        createCustomer(customerInfo).then(getCustomers());
         onClose();
         setCustomerInfo({});
-        getCustomers();
       }
     }
   };

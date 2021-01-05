@@ -21,6 +21,7 @@ export const ProposalProvider = (props) => {
       .then((res) => res.json())
       .then(setProposals);
   };
+  
 
   const getSingleProposal = (selectedProposal) => {
     return fetch(`http://127.0.0.1:8000/proposals/${selectedProposal}`, {
@@ -31,6 +32,7 @@ export const ProposalProvider = (props) => {
       .then((res) => res.json())
       .then(setSingleProposal);
   };
+  
 
   const deleteProposal = (selectedProposal) => {
     return fetch(`http://127.0.0.1:8000/proposals/${selectedProposal}`, {
@@ -49,8 +51,7 @@ export const ProposalProvider = (props) => {
         Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
       },
       body: JSON.stringify(checkedProposalItem),
-    });
-    //   .then(getSingleProposal);
+    }).then(getSingleProposal(singleProposal.id));
   };
 
   const createProposal = (newProposal) => {

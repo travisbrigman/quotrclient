@@ -13,7 +13,10 @@ export const CustomerProvider = (props) => {
       },
     })
       .then((res) => res.json())
-      .then(setCustomers);
+      .then((returnedItem) => {
+        setCustomers(returnedItem);
+        return returnedItem;
+      });
   };
 
   const createCustomer = (newCustomer) => {

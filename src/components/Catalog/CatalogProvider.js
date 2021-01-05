@@ -89,7 +89,7 @@ export const CatalogProvider = (props) => {
         Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
       },
       body: JSON.stringify(newItem),
-    }).then((res) => res.json());
+    }).then((res) => res.json()).then(getItems);
   };
 
   const deleteCatalogItem = (itemId) => {

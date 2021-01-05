@@ -143,7 +143,6 @@ export const AddCatalogItem = (props) => {
     setAddAccessoryState(false);
   }
 
-  // console.log("checked", checked);
 
   const actionItems = [
     {
@@ -275,7 +274,7 @@ export const AddCatalogItem = (props) => {
                     type="file"
                     name="image_path"
                     id="item_image"
-                    value={state.image_path}
+                    // value={state.image_path}
                     onChange={handleChange}
                   />
                 </FormField>
