@@ -1,20 +1,12 @@
-import {
-  Heading,
-  Box,
-  Button,
-  CheckBox,
-  List,
-  Menu,
-  Text,
-  DataTable,
-} from "grommet";
+import { Heading, Box, Button, CheckBox, Menu, Text, DataTable } from "grommet";
 import { More } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { ProposalContext } from "./ProposalProvider";
-import { columns } from "./ProposalColumns";
+import { columns, customerColumns } from "./ProposalColumns";
 import { AddCustomerToProposal } from "./AddCustToNewProposal";
 import { EditLineItem } from "./EditLineItem";
 import { CatalogContext } from "../Catalog/CatalogProvider";
+import { Link } from "react-router-dom";
 
 export const Proposals = () => {
   const {
@@ -27,7 +19,7 @@ export const Proposals = () => {
     createProposal,
   } = useContext(ProposalContext);
 
-  const { patchItem } = useContext(CatalogContext)
+  const { patchItem } = useContext(CatalogContext);
 
   useEffect(() => {
     getProposals();
@@ -81,23 +73,22 @@ export const Proposals = () => {
       deleteProposalItem(checkedLineItemId);
     });
     setChecked([]);
+    getSingleProposal(singleProposal.id);
   };
 
   const editLineItem = (margin) => {
-      checked.forEach(checkedLineItemId => {
-          const matched = singleProposal.items.find(proposalItem => proposalItem.id === checkedLineItemId)
-          const updateObj = { id: matched.item.id, margin: margin };
-          patchItem(updateObj)
-
-      })
-    setOpenEditModal(false)
-    setChecked([])
-    getSingleProposal(singleProposal.id)
-
+    checked.forEach((checkedLineItemId) => {
+      const matched = singleProposal.proposalitems.find(
+        (proposalItem) => proposalItem.id === checkedLineItemId
+      );
+      const updateObj = { id: matched.item.id, margin: margin };
+      patchItem(updateObj);
+    });
+    setOpenEditModal(false);
+    setChecked([]);
+    getSingleProposal(singleProposal.id);
   };
 
-  console.log(checked);
-  
   return (
     <Box direction="column">
       <AddCustomerToProposal
@@ -105,33 +96,54 @@ export const Proposals = () => {
         onClose={onClose}
         constructNewProposal={constructNewProposal}
       />
-      <EditLineItem open={openEditModal} setOpen={setOpenEditModal} editLineItem={editLineItem} />
-      <Heading>Proposals</Heading>
-      <Box direction="row">
+      <EditLineItem
+        open={openEditModal}
+        setOpen={setOpenEditModal}
+        editLineItem={editLineItem}
+      />
+      <Box direction="row" pad="medium" align="start">
         {open && (
           <Box pad="large">
             <Heading level="3">Open Proposal</Heading>
-            <Box gap="xsmall" direction="row">
-              <Text color="text-strong" weight="bold">
+            <Link to="/export">
+              <Button label="Export Proposal" primary />
+            </Link>
+            <Box gap="xsmall" direction="row" align="baseline">
+              <Heading
+                level={5}
+                margin="xsmall"
+                color="text-strong"
+                weight="bold"
+              >
                 Organization
-              </Text>
+              </Heading>
               <Text color="text-xweak">
                 {singleProposal.customer.organization}
               </Text>
             </Box>
-            <Box gap="xsmall" direction="row">
-              <Text color="text-strong" weight="bold">
+            <Box gap="xsmall" direction="row" align="baseline">
+              <Heading
+                level={5}
+                margin="xsmall"
+                color="text-strong"
+                weight="bold"
+              >
                 Contact Name
-              </Text>
+              </Heading>
               <Text color="text-xweak">
                 {singleProposal.customer.first_name}{" "}
                 {singleProposal.customer.last_name}
               </Text>
             </Box>
-            <Box gap="xsmall" direction="row">
-              <Text color="text-strong" weight="bold">
+            <Box gap="xsmall" direction="row" align="baseline">
+              <Heading
+                level={5}
+                margin="xsmall"
+                color="text-strong"
+                weight="bold"
+              >
                 Contact Email
-              </Text>
+              </Heading>
               <Text color="text-xweak">{singleProposal.customer.email}</Text>
             </Box>
             <Box margin="small">
@@ -148,15 +160,25 @@ export const Proposals = () => {
                     ),
                     header: (
                       <CheckBox
-                        checked={checked.length === singleProposal.items.length}
+                        checked={
+                          checked.length === singleProposal.proposalitems.length
+                        }
                         indeterminate={
                           checked.length > 0 &&
-                          checked.length < singleProposal.items.length
+                          checked.length < singleProposal.proposalitems.length
                         }
                         onChange={onCheckAll}
                       />
                     ),
                     sortable: false,
+                  },
+                  {
+                    property: "index",
+                    render: (datum) =>
+                      singleProposal.proposalitems.findIndex(
+                        (index) => index.id === datum.id
+                      ) + 1,
+                    header: "Line Item",
                   },
                   ...columns,
                 ].map((col) => ({
@@ -165,7 +187,7 @@ export const Proposals = () => {
                     col.property === "item.make" ||
                     col.property === "item.model",
                 }))}
-                data={singleProposal.items}
+                data={singleProposal.proposalitems}
                 sortable
                 resizeable
               />
@@ -175,42 +197,34 @@ export const Proposals = () => {
           </Box>
         )}
         <Box pad="large">
-          <List
+          <DataTable
+            columns={[
+              ...customerColumns,
+              {
+                render: (datum) => (
+                  <Menu
+                    key={datum.id}
+                    icon={<More />}
+                    hoverIndicator
+                    items={[
+                      {
+                        label: "show",
+                        onClick: () => {
+                          displayProposal(datum.id);
+                        },
+                      },
+                      {
+                        label: "delete",
+                        onClick: () => {
+                          deleteSingleProposal(datum.id);
+                        },
+                      },
+                    ]}
+                  />
+                ),
+              },
+            ]}
             data={proposals}
-            primaryKey={(item) =>
-              item.customer !== null
-                ? item.customer.organization
-                : "no customer"
-            }
-            secondaryKey={(item) =>
-              item.customer !== null
-                ? (item.customer.first_name, item.customer.last_name)
-                : ""
-            }
-            pad={{ left: "small", right: "none" }}
-            action={(item, index) => {
-              return (
-                <Menu
-                  key={index}
-                  icon={<More />}
-                  hoverIndicator
-                  items={[
-                    {
-                      label: "show",
-                      onClick: () => {
-                        displayProposal(item.id);
-                      },
-                    },
-                    {
-                      label: "delete",
-                      onClick: () => {
-                        deleteSingleProposal(item.id);
-                      },
-                    },
-                  ]}
-                />
-              );
-            }}
           />
         </Box>
       </Box>

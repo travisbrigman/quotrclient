@@ -4,15 +4,18 @@ import {
   FormField,
   Heading,
   Layer,
+  Text,
   TextInput,
   TextArea,
+  Menu,
 } from "grommet";
-import { Add, Close, Edit } from "grommet-icons";
+import { Add, Close, Edit, New, Trash } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
+import { SelectToEdit } from "./SelectToEdit.js";
 import { SingleEditPopUp } from "./SingleEditPopup.js";
 
-export const AddCatalogItem = (props) => {
+export const AddCatalogItem = ({addAccessoryState, setAddAccessoryState}) => {
   const {
     createItem,
     getItems,
@@ -20,6 +23,7 @@ export const AddCatalogItem = (props) => {
     checked,
     setChecked,
     updateItem,
+    deleteCatalogItem,
   } = useContext(CatalogContext);
 
   //modal glue
@@ -38,19 +42,45 @@ export const AddCatalogItem = (props) => {
   const onOpen = () => setOpen(true);
 
   const [viewSingleEdit, setViewSingleEdit] = useState(false);
+  const [viewSelectToEdit, setViewSelectToEdit] = useState(false);
 
   useEffect(() => {
     if (editMode) {
-      getSingleItem(checked[0]).then(setState);
+      if (checked.length !== 0) {
+        getSingleItem(checked[0]).then(setState);
+      }
     }
   }, [checked, editMode]);
 
-  function handleChange(evt) {
-    const value = evt.target.value;
-    setState({
-      ...state,
-      [evt.target.name]: value,
+  const getBase64 = (file, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(file);
+  };
+
+  const createItemImageString = (event) => {
+    getBase64(event.target.files[0], (base64ImageString) => {
+      setState({
+        ...state,
+        [event.target.name]: base64ImageString,
+      });
     });
+  };
+
+  function handleChange(evt) {
+    if (evt.target.type === "file") {
+      createItemImageString(evt);
+    } else if (evt.target.type === "number") {
+      setState({
+        ...state,
+        [evt.target.name]: parseFloat(evt.target.value),
+      });
+    } else {
+      setState({
+        ...state,
+        [evt.target.name]: evt.target.value,
+      });
+    }
   }
 
   const handleClick = () => {
@@ -62,33 +92,88 @@ export const AddCatalogItem = (props) => {
         cost: state.cost,
         margin: state.margin,
         description: state.description,
-        image_url: state.image_url,
+        image_path: state.image_path,
         created_on: jsonDate,
       })
         .then(setChecked([]))
-        .then(getItems);
+        .then(getItems());
       setEditMode(false);
     } else {
-      createItem(state)
+      createItem(state);
     }
     onClose();
     setState({ created_on: jsonDate });
   };
 
-  return (
-    <>
-      <Button icon={<Add />} label="Add" onClick={onOpen} />
-      <Button
-        icon={<Edit />}
-        label="Edit"
-        onClick={() => {
-          setEditMode(true);
+  const handleDelete = () => {
+    checked.forEach((checkedItemId) => {
+      deleteCatalogItem(checkedItemId)
+      .then(setChecked([]));
+    });
+  };
+
+  const actionItems = [
+    {
+      label: <Box alignSelf="center">New</Box>,
+      onClick: onOpen,
+      icon: (
+        <Box pad="medium">
+          <New size="small" />
+        </Box>
+      ),
+    },
+    {
+      label: <Box alignSelf="center">Edit</Box>,
+      onClick: () => {
+        setEditMode(true);
+        if (checked.length === 0) {
+          setViewSelectToEdit(true);
+        } else {
           onOpen();
           if (checked.length > 1) {
             setViewSingleEdit(true);
           }
-        }}
-      />
+        }
+      },
+      icon: (
+        <Box pad="medium">
+          <Edit size="small" />
+        </Box>
+      ),
+    },
+    {
+      label: <Box alignSelf="center">Delete</Box>,
+      onClick: handleDelete,
+      icon: (
+        <Box pad="medium">
+          <Trash size="small" />
+        </Box>
+      ),
+    },
+    {
+      label: <Box alignSelf="center">Add Accessories</Box>,
+      onClick: () => setAddAccessoryState(true),
+      icon: (
+        <Box pad="medium">
+          <Add size="small" />
+        </Box>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      {addAccessoryState && (
+          <Heading>Add Accessories</Heading>
+      )}
+      <Box width="xsmall" size="xsmall" alignSelf="end">
+        <Menu
+          label="Actions"
+          items={actionItems}
+          dropBackground={{ color: "background", opacity: "strong" }}
+        />
+      </Box>
+
       <Box align="end" justify="center" pad="small">
         {open && (
           <Layer
@@ -123,13 +208,19 @@ export const AddCatalogItem = (props) => {
                   </FormField>
                   <FormField label="Cost">
                     <TextInput
+                      type="number"
                       name="cost"
+                      min={0}
                       value={state.cost}
                       onChange={handleChange}
                     />
                   </FormField>
                   <FormField label="Margin">
                     <TextInput
+                      type="number"
+                      step={0.1}
+                      min={0}
+                      max={100}
                       name="margin"
                       value={state.margin}
                       onChange={handleChange}
@@ -144,9 +235,11 @@ export const AddCatalogItem = (props) => {
                   />
                 </FormField>
                 <FormField label="Image">
-                  <TextInput
-                    name="image_url"
-                    value={state.image_url}
+                  <input
+                    type="file"
+                    name="image_path"
+                    id="item_image"
+                    // value={state.image_path}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -161,6 +254,10 @@ export const AddCatalogItem = (props) => {
       <SingleEditPopUp
         viewSingleEdit={viewSingleEdit}
         setViewSingleEdit={setViewSingleEdit}
+      />
+      <SelectToEdit
+        viewSelectToEdit={viewSelectToEdit}
+        setViewSelectToEdit={setViewSelectToEdit}
       />
     </>
   );

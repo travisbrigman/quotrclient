@@ -3,9 +3,8 @@ import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Grommet } from "grommet";
-import { theme } from "./theme.js"
+import { theme } from "./theme.js";
 import { Quotr } from "./Quotr.js";
-
 
 ReactDOM.render(
   <React.StrictMode>

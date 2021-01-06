@@ -7,11 +7,22 @@ export const CatalogProvider = (props) => {
   const [singleItem, setSingleItem] = useState({});
   const [checked, setChecked] = useState([]);
   const [status, setStatus ] = useState(false)
+  const [searchTerms, setTerms ] = useState('')
+  const [valueMultiple, setValueMultiple] = useState([]);
  
-  
 
   const getItems = () => {
     return fetch("http://127.0.0.1:8000/items", {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then(setItems);
+  };
+
+  const getItemsByMake = (make) => {
+    return fetch(`http://127.0.0.1:8000/items?make=${make}`, {
       headers: {
         Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
       },
@@ -78,8 +89,19 @@ export const CatalogProvider = (props) => {
         Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
       },
       body: JSON.stringify(newItem),
-    }).then((res) => res.json());
+    }).then((res) => res.json()).then(getItems);
   };
+
+  const deleteCatalogItem = (itemId) => {
+    return fetch(`http://127.0.0.1:8000/items/${itemId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(itemId),
+    }).then(getItems);
+  }
 
   return (
     <CatalogContext.Provider
@@ -97,7 +119,13 @@ export const CatalogProvider = (props) => {
         checked,
         setChecked,
         status,
-        setStatus
+        setStatus,
+        searchTerms,
+        setTerms,
+        valueMultiple,
+        setValueMultiple,
+        getItemsByMake,
+        deleteCatalogItem
       }}
     >
       {props.children}

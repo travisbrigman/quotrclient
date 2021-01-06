@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import {
   Box,
   Button,
@@ -10,36 +10,52 @@ import {
 } from "grommet";
 import { CustomerContext } from "./CustomerProvider";
 
-export const NewCustomerModal = ({ open, onClose }, props) => {
-
-  const [state, setState] = useState({});
+export const NewCustomerModal = (
+  { open, onClose, editMode, setEditMode, customerId },
+  props
+) => {
+  const {
+    createCustomer,
+    getCustomers,
+    customerInfo,
+    setCustomerInfo,
+    updateCustomer,
+  } = useContext(CustomerContext);
 
   function handleChange(evt) {
     const value = evt.target.value;
-    setState({
-      ...state,
+    setCustomerInfo({
+      ...customerInfo,
       [evt.target.name]: value,
     });
   }
 
-  const { createCustomer, getCustomers } = useContext(CustomerContext);
-
   const handleNewCustomer = (e) => {
     e.preventDefault();
-
-//TODO: This doesnt really work. fix to handle errors better
-    if (Object.values(state).length === 0) {
-        
-      alert("not all fields filled out!");
-      
+    if (editMode) {
+      updateCustomer({
+        id: customerInfo.id,
+        first_name: customerInfo.first_name,
+        last_name: customerInfo.last_name,
+        email: customerInfo.email,
+        organization: customerInfo.organization,
+      }).then(setCustomerInfo({}));
+      setEditMode(false);
+      onClose()
     } else {
-      createCustomer(state)
-      onClose();
-      setState({})
-      getCustomers()
+      //TODO: This doesnt really work. fix to handle errors better
+      if (Object.values(customerInfo).length === 0) {
+        alert("not all fields filled out!");
+      } else {
+        createCustomer(customerInfo).then(getCustomers());
+        onClose();
+        setCustomerInfo({});
+      }
     }
   };
 
+  const modalMessage = (editMode) ? "Edit Customer Info" : "Create New Customer"
+  const buttonText = (editMode) ? "Update" : "Create"
   return (
     <>
       {open && (
@@ -51,14 +67,14 @@ export const NewCustomerModal = ({ open, onClose }, props) => {
         >
           <Box margin="xsmall">
             <Heading margin="xsmall" level="3">
-              Create New Customer
+              {modalMessage}
             </Heading>
-            <Form >
+            <Form>
               <FormField label="first name" htmlFor="first-name">
                 <TextInput
                   name="first_name"
                   type="text"
-                  value={state.first_name}
+                  value={customerInfo.first_name}
                   onChange={handleChange}
                   required
                 />
@@ -66,27 +82,32 @@ export const NewCustomerModal = ({ open, onClose }, props) => {
               <FormField label="last name">
                 <TextInput
                   name="last_name"
-                  value={state.last_name}
+                  value={customerInfo.last_name}
                   onChange={handleChange}
                 />
               </FormField>
               <FormField label="email">
                 <TextInput
                   name="email"
-                  value={state.email}
+                  value={customerInfo.email}
                   onChange={handleChange}
                 />
               </FormField>
               <FormField label="organization">
                 <TextInput
                   name="organization"
-                  value={state.organization}
+                  value={customerInfo.organization}
                   onChange={handleChange}
                 />
               </FormField>
             </Form>
             <Box direction="row-responsive">
-              <Button primary margin="small" label="Create" onClick={handleNewCustomer} />
+              <Button
+                primary
+                margin="small"
+                label={buttonText}
+                onClick={handleNewCustomer}
+              />
               <Button
                 secondary
                 margin="small"

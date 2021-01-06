@@ -1,9 +1,10 @@
-import { Box, Button, CheckBox, DataTable, Heading } from "grommet";
+import { Box, Button, CheckBox, DataTable, Text } from "grommet";
 import { Compliance } from "grommet-icons";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CatalogContext } from "./CatalogProvider.js";
 import { columns } from "./CatalogColumns.js";
 import { ProposalContext } from "../Proposals/ProposalProvider.js";
+import { QuantityPopup } from "./QuantityPopup.js";
 
 const controlledColumns = columns.map((col) => ({ ...col }));
 
@@ -15,9 +16,27 @@ export const PartsCatalog = (props) => {
     checked,
     setChecked,
     status,
-    setStatus
+    searchTerms,
   } = useContext(CatalogContext);
   const { singleProposal } = useContext(ProposalContext);
+
+  const [filteredItems, setFiltered] = useState([]);
+
+  const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
+  const [quant, setQuant] = useState(0);
+
+  useEffect(() => {
+    if (searchTerms !== "") {
+      // If the search field is not blank, display matching items
+      const subsetMake = items.filter((item) =>
+        item.make.toLowerCase().includes(searchTerms.toLowerCase())
+      );
+      setFiltered(subsetMake);
+    } else {
+      // If the search field is blank, display all animals
+      setFiltered(items);
+    }
+  }, [searchTerms, items]);
 
   const onCheck = (event, value) => {
     if (event.target.checked) {
@@ -34,78 +53,109 @@ export const PartsCatalog = (props) => {
     getItems();
   }, []);
 
-  let itemsApproved = 0
-  
-  
+  const quantityMultiplier = (array, quantity) => {
+    var newArray = [];
+    for (let iteration = 0; iteration < quantity; iteration++) {
+      array.map((item) => newArray.push(item));
+    }
+    newArray.sort(function (a, b) {
+      return a - b;
+    });
+    return newArray;
+  };
+
+  let checkedWithQuantity = quantityMultiplier(checked, quant);
+
   const approvedChecked = () => {
-      checked.forEach((selectedItems) => {
-          addItemToProposal({
-              item_id: selectedItems,
-              proposal_id: singleProposal.id,
-            })
-            itemsApproved++
-            // .then(setStatus(false))
-        }
-        )
-        setChecked([]);
-    };
-    
-    console.log(itemsApproved);
+    checkedWithQuantity.forEach((selectedItems) => {
+      addItemToProposal({
+        item_id: selectedItems,
+        proposal_id: singleProposal.id,
+      }).then(console.log(status));
+
+      // .then(setStatus(false))
+    });
+    setChecked([]);
+  };
+
   return (
     <Box pad="large">
+      <QuantityPopup
+        viewQuantityPopup={viewQuantityPopup}
+        setViewQuantityPopup={setViewQuantityPopup}
+        quant={quant}
+        setQuant={setQuant}
+        approvedChecked={approvedChecked}
+      />
       <Box direction="column" pad="small">
-        <Heading>Catalog</Heading>
-
-        <DataTable
-          columns={[
-            {
-              property: "checkbox",
-              render: (datum) => (
-                <CheckBox
-                  key={datum.id}
-                  checked={checked.indexOf(datum.id) !== -1}
-                  onChange={(e) => onCheck(e, datum.id)}
+        <Box width="small">
+          <Button
+            primary
+            label="Add to Proposal"
+            icon={<Compliance />}
+            onClick={() => {
+              setViewQuantityPopup(true);
+              //   approvedChecked();
+            }}
+            margin="small"
+          />
+        </Box>
+        <Box elevation="small" wrap={true}>
+          <DataTable
+            columns={[
+              {
+                //   size: "40px",
+                property: "checkbox",
+                render: (datum) => (
+                  <CheckBox
+                    key={datum.id}
+                    checked={checked.indexOf(datum.id) !== -1}
+                    onChange={(e) => onCheck(e, datum.id)}
+                  />
+                ),
+                header: (
+                  <CheckBox
+                    checked={checked.length === items.length}
+                    indeterminate={
+                      checked.length > 0 && checked.length < items.length
+                    }
+                    onChange={onCheckAll}
+                  />
+                ),
+                sortable: false,
+              },
+              ...controlledColumns,
+            ].map((col) => ({ ...col }))}
+            data={filteredItems}
+            sortable
+            resizeable
+            size="medium"
+            placeHolder={
+              <Box
+                fill
+                align="center"
+                justify="center"
+                direction="row"
+                pad="large"
+                gap="small"
+                background={{ color: "background-front", opacity: "strong" }}
+              >
+                <Box
+                  direction="row"
+                  border={[
+                    { side: "all", color: "transparent", size: "medium" },
+                    { side: "horizontal", color: "brand", size: "medium" },
+                  ]}
+                  pad="small"
+                  round="full"
+                  animation={{ type: "rotateRight", duration: 1500 }}
                 />
-              ),
-              header: (
-                <CheckBox
-                  checked={checked.length === items.length}
-                  indeterminate={
-                    checked.length > 0 && checked.length < items.length
-                  }
-                  onChange={onCheckAll}
-                />
-              ),
-              sortable: false,
-            },
-            ...controlledColumns,
-          ].map((col) => ({ ...col }))}
-          data={items}
-          sortable
-          size="small"
-        />
-        <Button
-          primary
-          label="Add to Proposal"
-          icon={<Compliance />}
-          onClick={() => {
-            approvedChecked();
-          }}
-          margin="small"
-        />
+                <Text weight="bold">Loading ...</Text>
+              </Box>
+            }
+          />
+        </Box>
       </Box>
     </Box>
   );
 };
-
-{
-  /* <Grid columns={size !== "small" ? "small" : "100%"} gap="small">
-<InfiniteScroll items={items} {...props}>
-  {(item) => (
-    <Card pad="large" key={item.id}>
-      {item.id}
-    </Card>
-  )}
-</InfiniteScroll>
-</Grid> */
-}
