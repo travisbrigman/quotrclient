@@ -65,7 +65,7 @@ export const Proposals = () => {
   };
   const onCheckAll = (event) =>
     setChecked(
-      event.target.checked ? singleProposal.items.map((datum) => datum.id) : []
+      event.target.checked ? singleProposal.proposalitems.map((datum) => datum.id) : []
     );
 
   const deleteLineItem = () => {
