@@ -6,7 +6,6 @@ import { columns, customerColumns } from "./ProposalColumns";
 import { AddCustomerToProposal } from "./AddCustToNewProposal";
 import { EditLineItem } from "./EditLineItem";
 import { CatalogContext } from "../Catalog/CatalogProvider";
-import Pdf from "react-to-pdf";
 import { Link } from "react-router-dom";
 
 export const Proposals = () => {

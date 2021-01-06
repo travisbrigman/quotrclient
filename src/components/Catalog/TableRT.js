@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
   useTable,
   useExpanded,
@@ -9,14 +9,13 @@ import {
 } from "react-table";
 import { CatalogContext } from "./CatalogProvider.js";
 import { ProposalContext } from "../Proposals/ProposalProvider.js";
-
 import { DefaultColumnFilter, Filter } from "./FiltersRT";
 import { QuantityPopup } from "./QuantityPopup";
 import { IndeterminateCheckbox } from "./IndeterminateCheckbox";
 import { Pagination } from "./Pagination";
 
-export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, setViewQuantityPopup }) => {
-  const { addItemToProposal, checked, setChecked, status } = useContext(
+export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, setViewQuantityPopup, addAccessoryState, setAddAccessoryState }) => {
+  const { addItemToProposal, status, setChecked, checked } = useContext(
     CatalogContext
   );
 
@@ -37,6 +36,7 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     previousPage,
     setPageSize,
     selectedFlatRows,
+    toggleAllRowsSelected,
     state: { pageIndex, pageSize, expanded, selectedRowIds },
   } = useTable(
     {
@@ -76,20 +76,19 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     }
   );
 
- 
   const [quant, setQuant] = useState(0);
 
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
   };
-
+  
   const checkedItems = selectedFlatRows.map((d) => {
     return d.original.id;
   });
-  useEffect(() => {
-    setChecked(checkedItems)
-  },[])
-
+  
+  // setChecked([])
+  console.log(checked);
+  
   const quantityMultiplier = (array, quantity) => {
     var newArray = [];
     for (let iteration = 0; iteration < quantity; iteration++) {
@@ -103,8 +102,6 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
 
   let checkedWithQuantity = quantityMultiplier(checkedItems, quant);
 
-  console.log(checkedItems, quant);
-  
   const approvedChecked = () => {
     checkedWithQuantity.forEach((selectedItems) => {
       addItemToProposal({
@@ -113,9 +110,38 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
       }).then(console.log(status));
 
     });
-    setChecked([]);
+    toggleAllRowsSelected(false)
   };
 
+    /*
+  click on add accessories
+  select an item
+  add that item to accessory object as 'item'
+  clear checked state
+  select an accessory
+  add that item to accessory object as 'accessory'
+  send POST request
+  */
+ 
+
+ const [accessoryObject, setAccessoryObject] = useState({
+   item: -1,
+   accessory: -1,
+ });
+
+ if (
+   addAccessoryState &&
+   checkedItems.length === 1 &&
+   accessoryObject.item === -1
+ ) {
+   setAccessoryObject({ item: checkedItems[0] });
+   toggleAllRowsSelected(false)
+ } else if (addAccessoryState && accessoryObject.item !== -1) {
+   setAccessoryObject({...accessoryObject, accessory: checkedItems[0] })
+   setAddAccessoryState(false);
+ }
+
+console.log(accessoryObject);
 
   return (
     <>

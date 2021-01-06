@@ -8,8 +8,7 @@ export const Customers = () => {
       //state variable and functions that change state of the state variable
   const [open, setOpen] = useState();
   const onOpen = () => setOpen(true);
-  const onClose = () => {setOpen(undefined)
-                         setEditMode(false)};
+  const onClose = () => {setOpen(undefined); setEditMode(false)};
   const [editMode, setEditMode ] = useState(false)
   const [clickedId, setClickedId] = useState(0)
 

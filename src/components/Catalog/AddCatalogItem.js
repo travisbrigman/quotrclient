@@ -15,7 +15,7 @@ import { CatalogContext } from "./CatalogProvider.js";
 import { SelectToEdit } from "./SelectToEdit.js";
 import { SingleEditPopUp } from "./SingleEditPopup.js";
 
-export const AddCatalogItem = (props) => {
+export const AddCatalogItem = ({addAccessoryState, setAddAccessoryState}) => {
   const {
     createItem,
     getItems,
@@ -96,7 +96,7 @@ export const AddCatalogItem = (props) => {
         created_on: jsonDate,
       })
         .then(setChecked([]))
-        .then(getItems);
+        .then(getItems());
       setEditMode(false);
     } else {
       createItem(state);
@@ -107,42 +107,10 @@ export const AddCatalogItem = (props) => {
 
   const handleDelete = () => {
     checked.forEach((checkedItemId) => {
-      deleteCatalogItem(checkedItemId);
+      deleteCatalogItem(checkedItemId)
+      .then(setChecked([]));
     });
   };
-
-  /*
-  click on add accessories
-  select an item
-  add that item to accessory object as 'item'
-  clear checked state
-  select an accessory
-  add that item to accessory object as 'accessory'
-  send POST request
-  */
-  const [addAccessoryState, setAddAccessoryState] = useState(false);
-
-  const [accessoryObject, setAccessoryObject] = useState({
-    item: -1,
-    accessory: -1,
-  });
-
-  const createAccessories = () => {
-    setAddAccessoryState(true);
-  };
-
-  if (
-    addAccessoryState &&
-    checked.length === 1 &&
-    accessoryObject.item === -1
-  ) {
-    setAccessoryObject({ item: checked[0] });
-    setChecked([]);
-  } else if (addAccessoryState && accessoryObject.item !== -1) {
-    accessoryObject.accessory = checked[0];
-    setAddAccessoryState(false);
-  }
-
 
   const actionItems = [
     {
@@ -184,7 +152,7 @@ export const AddCatalogItem = (props) => {
     },
     {
       label: <Box alignSelf="center">Add Accessories</Box>,
-      onClick: createAccessories,
+      onClick: () => setAddAccessoryState(true),
       icon: (
         <Box pad="medium">
           <Add size="small" />
@@ -196,10 +164,7 @@ export const AddCatalogItem = (props) => {
   return (
     <>
       {addAccessoryState && (
-        <>
-          <Heading>Add Accessories</Heading>{" "}
-          <Text>{JSON.stringify(accessoryObject)}</Text>
-        </>
+          <Heading>Add Accessories</Heading>
       )}
       <Box width="xsmall" size="xsmall" alignSelf="end">
         <Menu

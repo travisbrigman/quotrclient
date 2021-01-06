@@ -50,7 +50,7 @@ export const PageContent = ({ activeItem }) => {
                 <Box direction="column">
                   <AddCatalogItem />
                   <PartsCatalog {...props} />
-                  <PartsCatalogRT {...props} />
+                  {/* <PartsCatalogRT {...props} /> */}
                 </Box>
               )}
             />

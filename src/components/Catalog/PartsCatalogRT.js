@@ -3,14 +3,15 @@ import { Box, Button } from "grommet";
 import { Compliance } from "grommet-icons";
 import { CatalogContext } from "./CatalogProvider";
 import { Styles } from "./StylesRT";
-import { TableModule } from "./TableRT"
-
+import { TableModule } from "./TableRT";
+import { AddCatalogItem } from "./AddCatalogItem";
 
 export const PartsCatalogRT = () => {
-
-  const { getItems, items } = useContext(CatalogContext)
+  const { getItems, items } = useContext(CatalogContext);
 
   const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
+  const [addAccessoryState, setAddAccessoryState] = useState(false);
+
 
   //get the array of catalog items from the database
   useEffect(() => {
@@ -18,29 +19,26 @@ export const PartsCatalogRT = () => {
   }, []);
 
   //put the items in a useMemo as "required" by React-Table 7
-  const data = useMemo(() => items,
-    [items]
-  );
+  const data = useMemo(() => items, [items]);
 
   //little helper function to convert ISO 8601 to MM/DD/YYYY
-  const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
+  const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
   });
-  
+
   const dateChanger = (dateString) => {
-    let parsedDate = Date.parse(dateString)
-    return dateTimeFormat.format(parsedDate)
-  
-  }
-  
+    let parsedDate = Date.parse(dateString);
+    return dateTimeFormat.format(parsedDate);
+  };
+
   //little helper function that takes a number and formats for USD $
-  const amountFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  const amountFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 2,
-  })
+  });
 
   //build our columns for the Data Table
   const columns = useMemo(
@@ -63,56 +61,66 @@ export const PartsCatalogRT = () => {
                   // We can even use the row.depth property
                   // and paddingLeft to indicate the depth
                   // of the row
-                  paddingLeft: `${row.depth * 2}rem`
-                }
+                  paddingLeft: `${row.depth * 2}rem`,
+                },
               })}
             >
               {row.isExpanded ? "👇" : "👉"}
             </span>
-          ) : null
+          ) : null,
       },
       {
         Header: "Manufacturer",
-        accessor: "make"
+        accessor: "make",
       },
       {
         Header: "Part #",
-        accessor: "model"
+        accessor: "model",
       },
       {
         Header: "Dealer Cost",
-        accessor: (values)=>{ return amountFormatter.format(values.cost)}
+        accessor: (values) => {
+          return amountFormatter.format(values.cost);
+        },
       },
       {
         Header: "Description",
-        accessor: "description"
+        accessor: "description",
       },
       {
         Header: "Date Created",
-        accessor: (values)=>{ return dateChanger(values.created_on)}
-      }
+        accessor: (values) => {
+          return dateChanger(values.created_on);
+        },
+      },
     ],
     []
   );
 
   return (
     <>
-    <Styles>
-    <Box width="small">
-                <Button
+    <AddCatalogItem addAccessoryState={addAccessoryState} setAddAccessoryState={setAddAccessoryState}/>
+    <Button label="set add accessory to false" onClick={() => {setAddAccessoryState(false)}}/>
+      <Styles>
+        <Box width="small">
+          <Button
             primary
             label="Add to Proposal"
             icon={<Compliance />}
             onClick={() => {
               setViewQuantityPopup(true);
-              //   approvedChecked();
             }}
             margin="small"
           />
         </Box>
-    <TableModule columns={columns} data={data} viewQuantityPopup={viewQuantityPopup} setViewQuantityPopup={setViewQuantityPopup} />
-  </Styles>
+        <TableModule
+          columns={columns}
+          data={data}
+          viewQuantityPopup={viewQuantityPopup}
+          setViewQuantityPopup={setViewQuantityPopup}
+          addAccessoryState={addAccessoryState} setAddAccessoryState={setAddAccessoryState}
+        />
+      </Styles>
     </>
-  )
-
-}
+  );
+};
