@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   useTable,
   useExpanded,
@@ -7,10 +7,20 @@ import {
   useRowSelect,
   useSortBy,
 } from "react-table";
-import { Row, Col, Button, Input, CustomInput } from "reactstrap";
-import { DefaultColumnFilter, Filter } from "./FiltersRT";
+import { CatalogContext } from "./CatalogProvider.js";
+import { ProposalContext } from "../Proposals/ProposalProvider.js";
 
-export const TableModule = ({ columns: userColumns, data }) => {
+import { DefaultColumnFilter, Filter } from "./FiltersRT";
+import { QuantityPopup } from "./QuantityPopup";
+import { IndeterminateCheckbox } from "./IndeterminateCheckbox";
+import { Pagination } from "./Pagination";
+
+export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, setViewQuantityPopup }) => {
+  const { addItemToProposal, checked, setChecked, status } = useContext(
+    CatalogContext
+  );
+
+  const { singleProposal } = useContext(ProposalContext);
   const {
     getTableProps,
     getTableBodyProps,
@@ -28,7 +38,6 @@ export const TableModule = ({ columns: userColumns, data }) => {
     setPageSize,
     selectedFlatRows,
     state: { pageIndex, pageSize, expanded, selectedRowIds },
-    // state: { expanded }
   } = useTable(
     {
       columns: userColumns,
@@ -67,40 +76,56 @@ export const TableModule = ({ columns: userColumns, data }) => {
     }
   );
 
+ 
+  const [quant, setQuant] = useState(0);
+
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
   };
 
-  const onChangeInSelect = (event) => {
-    setPageSize(Number(event.target.value));
-  };
+  const checkedItems = selectedFlatRows.map((d) => {
+    return d.original.id;
+  });
+  useEffect(() => {
+    setChecked(checkedItems)
+  },[])
 
-  const onChangeInInput = (event) => {
-    const page = event.target.value ? Number(event.target.value) - 1 : 0;
-    gotoPage(page);
-  };
-
-  const IndeterminateCheckbox = forwardRef(
-    ({ indeterminate, ...rest }, ref) => {
-      const defaultRef = useRef();
-      const resolvedRef = ref || defaultRef;
-
-      useEffect(() => {
-        resolvedRef.current.indeterminate = indeterminate;
-      }, [resolvedRef, indeterminate]);
-
-      return (
-        <>
-          <input type="checkbox" ref={resolvedRef} {...rest} />
-        </>
-      );
+  const quantityMultiplier = (array, quantity) => {
+    var newArray = [];
+    for (let iteration = 0; iteration < quantity; iteration++) {
+      array.map((item) => newArray.push(item));
     }
-  );
+    newArray.sort(function (a, b) {
+      return a - b;
+    });
+    return newArray;
+  };
 
-  // console.log(selectedFlatRows.map())
+  let checkedWithQuantity = quantityMultiplier(checkedItems, quant);
+
+  console.log(checkedItems, quant);
+  
+  const approvedChecked = () => {
+    checkedWithQuantity.forEach((selectedItems) => {
+      addItemToProposal({
+        item_id: selectedItems,
+        proposal_id: singleProposal.id,
+      }).then(console.log(status));
+
+    });
+    setChecked([]);
+  };
+
 
   return (
     <>
+      <QuantityPopup
+        viewQuantityPopup={viewQuantityPopup}
+        setViewQuantityPopup={setViewQuantityPopup}
+        quant={quant}
+        setQuant={setQuant}
+        approvedChecked={approvedChecked}
+      />
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -151,65 +176,18 @@ export const TableModule = ({ columns: userColumns, data }) => {
           </code>
         </pre>
       </pre>
-      <Row style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
-        <Col md={3}>
-          <Button
-            color="primary"
-            onClick={() => gotoPage(0)}
-            disabled={!canPreviousPage}
-          >
-            {"<<"}
-          </Button>
-          <Button
-            color="primary"
-            onClick={previousPage}
-            disabled={!canPreviousPage}
-          >
-            {"<"}
-          </Button>
-        </Col>
-        <Col md={2} style={{ marginTop: 7 }}>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>
-        </Col>
-        <Col md={2}>
-          <Input
-            type="number"
-            min={1}
-            style={{ width: 70 }}
-            max={pageOptions.length}
-            defaultValue={pageIndex + 1}
-            onChange={onChangeInInput}
-          />
-        </Col>
-        <Col md={2}>
-          <CustomInput
-            type="select"
-            value={pageSize}
-            onChange={onChangeInSelect}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </CustomInput>
-        </Col>
-        <Col md={3}>
-          <Button color="primary" onClick={nextPage} disabled={!canNextPage}>
-            {">"}
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => gotoPage(pageCount - 1)}
-            disabled={!canNextPage}
-          >
-            {">>"}
-          </Button>
-        </Col>
-      </Row>
+      <Pagination
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        pageOptions={pageOptions}
+        pageCount={pageCount}
+        gotoPage={gotoPage}
+        nextPage={nextPage}
+        previousPage={previousPage}
+        setPageSize={setPageSize}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+      />
     </>
   );
 };

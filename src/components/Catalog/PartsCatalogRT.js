@@ -1,11 +1,16 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Box, Button } from "grommet";
+import { Compliance } from "grommet-icons";
 import { CatalogContext } from "./CatalogProvider";
 import { Styles } from "./StylesRT";
 import { TableModule } from "./TableRT"
 
+
 export const PartsCatalogRT = () => {
 
   const { getItems, items } = useContext(CatalogContext)
+
+  const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
 
   //get the array of catalog items from the database
   useEffect(() => {
@@ -91,9 +96,23 @@ export const PartsCatalogRT = () => {
   );
 
   return (
+    <>
     <Styles>
-    <TableModule columns={columns} data={data} />
+    <Box width="small">
+                <Button
+            primary
+            label="Add to Proposal"
+            icon={<Compliance />}
+            onClick={() => {
+              setViewQuantityPopup(true);
+              //   approvedChecked();
+            }}
+            margin="small"
+          />
+        </Box>
+    <TableModule columns={columns} data={data} viewQuantityPopup={viewQuantityPopup} setViewQuantityPopup={setViewQuantityPopup} />
   </Styles>
+    </>
   )
 
 }
