@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   useTable,
   useExpanded,
@@ -86,8 +86,10 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     return d.original.id;
   });
   
-  // setChecked([])
   console.log(checked);
+  useEffect(()=>{
+      setChecked(checkedItems)
+  },[selectedRowIds])
   
   const quantityMultiplier = (array, quantity) => {
     var newArray = [];
@@ -99,20 +101,20 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     });
     return newArray;
   };
-
-  let checkedWithQuantity = quantityMultiplier(checkedItems, quant);
-
+  
+  let checkedWithQuantity = quantityMultiplier(checked, quant);
+  
   const approvedChecked = () => {
     checkedWithQuantity.forEach((selectedItems) => {
       addItemToProposal({
         item_id: selectedItems,
         proposal_id: singleProposal.id,
       }).then(console.log(status));
-
+      
     });
     toggleAllRowsSelected(false)
   };
-
+  
     /*
   click on add accessories
   select an item
@@ -131,13 +133,13 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
 
  if (
    addAccessoryState &&
-   checkedItems.length === 1 &&
+   checked.length === 1 &&
    accessoryObject.item === -1
  ) {
-   setAccessoryObject({ item: checkedItems[0] });
+   setAccessoryObject({ item: checked[0] });
    toggleAllRowsSelected(false)
  } else if (addAccessoryState && accessoryObject.item !== -1) {
-   setAccessoryObject({...accessoryObject, accessory: checkedItems[0] })
+   setAccessoryObject({...accessoryObject, accessory: checked[0] })
    setAddAccessoryState(false);
  }
 

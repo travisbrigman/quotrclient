@@ -48,9 +48,9 @@ export const PageContent = ({ activeItem }) => {
               path="/catalog"
               render={(props, size) => (
                 <Box direction="column">
-                  <AddCatalogItem />
-                  <PartsCatalog {...props} />
-                  {/* <PartsCatalogRT {...props} /> */}
+                  {/* <AddCatalogItem /> */}
+                  {/* <PartsCatalog {...props} /> */}
+                  <PartsCatalogRT {...props} />
                 </Box>
               )}
             />
