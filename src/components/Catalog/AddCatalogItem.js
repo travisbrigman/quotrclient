@@ -4,7 +4,6 @@ import {
   FormField,
   Heading,
   Layer,
-  Text,
   TextInput,
   TextArea,
   Menu,
@@ -15,7 +14,7 @@ import { CatalogContext } from "./CatalogProvider.js";
 import { SelectToEdit } from "./SelectToEdit.js";
 import { SingleEditPopUp } from "./SingleEditPopup.js";
 
-export const AddCatalogItem = ({addAccessoryState, setAddAccessoryState}) => {
+export const AddCatalogItem = () => {
   const {
     createItem,
     getItems,
@@ -24,6 +23,7 @@ export const AddCatalogItem = ({addAccessoryState, setAddAccessoryState}) => {
     setChecked,
     updateItem,
     deleteCatalogItem,
+    setAddAccessoryState
   } = useContext(CatalogContext);
 
   //modal glue
@@ -112,6 +112,10 @@ export const AddCatalogItem = ({addAccessoryState, setAddAccessoryState}) => {
     });
   };
 
+  const accessoryClick = () => {
+    setAddAccessoryState(true)
+  }
+
   const actionItems = [
     {
       label: <Box alignSelf="center">New</Box>,
@@ -152,7 +156,7 @@ export const AddCatalogItem = ({addAccessoryState, setAddAccessoryState}) => {
     },
     {
       label: <Box alignSelf="center">Add Accessories</Box>,
-      onClick: () => setAddAccessoryState(true),
+      onClick: accessoryClick,
       icon: (
         <Box pad="medium">
           <Add size="small" />
@@ -163,9 +167,6 @@ export const AddCatalogItem = ({addAccessoryState, setAddAccessoryState}) => {
 
   return (
     <>
-      {addAccessoryState && (
-          <Heading>Add Accessories</Heading>
-      )}
       <Box width="xsmall" size="xsmall" alignSelf="end">
         <Menu
           label="Actions"

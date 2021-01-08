@@ -1,17 +1,44 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { Box, Button } from "grommet";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Box, Button, Heading, Text } from "grommet";
 import { Compliance } from "grommet-icons";
 import { CatalogContext } from "./CatalogProvider";
 import { Styles } from "./StylesRT";
 import { TableModule } from "./TableRT";
 import { AddCatalogItem } from "./AddCatalogItem";
 
-export const PartsCatalogRT = () => {
-  const { getItems, items } = useContext(CatalogContext);
+export const PartsCatalogRT = (props) => {
+  const { getItems, items, checked, setChecked, createAccessory, setAccessoryArray, accessoryArray, setAddAccessoryState, addAccessoryState } = useContext(CatalogContext);
 
   const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
-  const [addAccessoryState, setAddAccessoryState] = useState(false);
 
+
+  /*
+  click on add accessories
+  select an item
+  add that item to accessory object as 'item'
+  clear checked state
+  select an accessory
+  add that item to accessory object as 'accessory'
+  send POST request
+  */
+ 
+// const [accessorizedItem, setAccessorizedItem] = useState(0)
+
+const accessorizedItem = useRef()
+useEffect(() => {
+
+  if (addAccessoryState) {
+  //  setAccessorizedItem(checked[0])
+  accessorizedItem.current = checked[0]
+  }
+  if (addAccessoryState && accessorizedItem !== 0){
+   setAccessoryArray(checked)
+  }
+},[addAccessoryState, checked])
+
+console.log("checked->",checked);
+console.log("accessorizedItem->",accessorizedItem);
+console.log("accessoryArray->",accessoryArray);
 
   //get the array of catalog items from the database
   useEffect(() => {
@@ -97,10 +124,34 @@ export const PartsCatalogRT = () => {
     []
   );
 
+    const makeAccessories = () =>{
+      accessoryArray.forEach(acc => {
+        const accessoryItem = {
+          item: accessorizedItem.current,
+          accessory: acc
+        }
+        createAccessory(accessoryItem)
+      })
+      setAddAccessoryState(false)
+    }
+
   return (
     <>
-    <AddCatalogItem addAccessoryState={addAccessoryState} setAddAccessoryState={setAddAccessoryState}/>
-    <Button label="set add accessory to false" onClick={() => {setAddAccessoryState(false)}}/>
+          {addAccessoryState && (
+            <Box>
+          <Heading>Add Accessories</Heading>
+          <Button label="make accessories" onClick={() => { makeAccessories() }}/>
+          </Box>
+          )}
+          {(accessorizedItem !== 0) && addAccessoryState && (
+            <Box>
+              <Text>Select an Item to add an accessory to</Text>
+            </Box>
+          )}
+          {addAccessoryState && (accessorizedItem > 0) && (
+            <Text>Select Accessories</Text>
+          )}
+
       <Styles>
         <Box width="small">
           <Button
@@ -118,7 +169,6 @@ export const PartsCatalogRT = () => {
           data={data}
           viewQuantityPopup={viewQuantityPopup}
           setViewQuantityPopup={setViewQuantityPopup}
-          addAccessoryState={addAccessoryState} setAddAccessoryState={setAddAccessoryState}
         />
       </Styles>
     </>

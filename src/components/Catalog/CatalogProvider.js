@@ -7,8 +7,10 @@ export const CatalogProvider = (props) => {
   const [singleItem, setSingleItem] = useState({});
   const [checked, setChecked] = useState([]);
   const [status, setStatus ] = useState(false)
-  const [searchTerms, setTerms ] = useState('')
+  // const [searchTerms, setTerms ] = useState('')
   const [valueMultiple, setValueMultiple] = useState([]);
+  const [accessoryArray, setAccessoryArray] = useState([]);
+  const [addAccessoryState, setAddAccessoryState] = useState(false);
  
 
   const getItems = () => {
@@ -103,6 +105,17 @@ export const CatalogProvider = (props) => {
     }).then(getItems);
   }
 
+  const createAccessory = (accessoryObject) => {
+    return fetch("http://127.0.0.1:8000/accessories", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(accessoryObject),
+    }).then((res) => res.json()).then(getItems);
+  }
+
   return (
     <CatalogContext.Provider
       value={{
@@ -120,12 +133,17 @@ export const CatalogProvider = (props) => {
         setChecked,
         status,
         setStatus,
-        searchTerms,
-        setTerms,
+        // searchTerms,
+        // setTerms,
         valueMultiple,
         setValueMultiple,
         getItemsByMake,
-        deleteCatalogItem
+        deleteCatalogItem,
+        createAccessory,
+        setAccessoryArray,
+        accessoryArray,
+        setAddAccessoryState,
+        addAccessoryState
       }}
     >
       {props.children}

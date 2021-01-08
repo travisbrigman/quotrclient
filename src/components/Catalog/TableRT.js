@@ -14,7 +14,7 @@ import { QuantityPopup } from "./QuantityPopup";
 import { IndeterminateCheckbox } from "./IndeterminateCheckbox";
 import { Pagination } from "./Pagination";
 
-export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, setViewQuantityPopup, addAccessoryState, setAddAccessoryState }) => {
+export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, setViewQuantityPopup }) => {
   const { addItemToProposal, status, setChecked, checked } = useContext(
     CatalogContext
   );
@@ -86,7 +86,6 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     return d.original.id;
   });
   
-  console.log(checked);
   useEffect(()=>{
       setChecked(checkedItems)
   },[selectedRowIds])
@@ -115,35 +114,7 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     toggleAllRowsSelected(false)
   };
   
-    /*
-  click on add accessories
-  select an item
-  add that item to accessory object as 'item'
-  clear checked state
-  select an accessory
-  add that item to accessory object as 'accessory'
-  send POST request
-  */
- 
 
- const [accessoryObject, setAccessoryObject] = useState({
-   item: -1,
-   accessory: -1,
- });
-
- if (
-   addAccessoryState &&
-   checked.length === 1 &&
-   accessoryObject.item === -1
- ) {
-   setAccessoryObject({ item: checked[0] });
-   toggleAllRowsSelected(false)
- } else if (addAccessoryState && accessoryObject.item !== -1) {
-   setAccessoryObject({...accessoryObject, accessory: checked[0] })
-   setAddAccessoryState(false);
- }
-
-console.log(accessoryObject);
 
   return (
     <>
@@ -186,6 +157,24 @@ console.log(accessoryObject);
         </tbody>
       </table>
       <br />
+
+      <Pagination
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        pageOptions={pageOptions}
+        pageCount={pageCount}
+        gotoPage={gotoPage}
+        nextPage={nextPage}
+        previousPage={previousPage}
+        setPageSize={setPageSize}
+        pageIndex={pageIndex}
+        pageSize={pageSize}
+      />
+    </>
+  );
+};
+
+/*
       <pre>
         <code>{JSON.stringify({ expanded: expanded }, null, 2)}</code>
         <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
@@ -204,18 +193,4 @@ console.log(accessoryObject);
           </code>
         </pre>
       </pre>
-      <Pagination
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        pageOptions={pageOptions}
-        pageCount={pageCount}
-        gotoPage={gotoPage}
-        nextPage={nextPage}
-        previousPage={previousPage}
-        setPageSize={setPageSize}
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-      />
-    </>
-  );
-};
+*/

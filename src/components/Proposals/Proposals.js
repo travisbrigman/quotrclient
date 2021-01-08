@@ -1,5 +1,5 @@
 import { Heading, Box, Button, CheckBox, Menu, Text, DataTable } from "grommet";
-import { More } from "grommet-icons";
+import { Edit, More, Trash } from "grommet-icons";
 import { useContext, useEffect, useState } from "react";
 import { ProposalContext } from "./ProposalProvider";
 import { columns, customerColumns } from "./ProposalColumns";
@@ -43,6 +43,11 @@ export const Proposals = () => {
     createProposal(propObject);
   };
 
+  if (singleProposal.proposalitems.length !== 0 && open !== true){
+    setOpen(true)
+  }
+  
+
   //𝒇𝒇𝒇 FUNCTIONS FOR PROPOSAL LIST ACTIONS 𝒇𝒇𝒇
   const displayProposal = (singleProposalId) => {
     getSingleProposal(singleProposalId);
@@ -65,7 +70,9 @@ export const Proposals = () => {
   };
   const onCheckAll = (event) =>
     setChecked(
-      event.target.checked ? singleProposal.proposalitems.map((datum) => datum.id) : []
+      event.target.checked
+        ? singleProposal.proposalitems.map((datum) => datum.id)
+        : []
     );
 
   const deleteLineItem = () => {
@@ -101,7 +108,7 @@ export const Proposals = () => {
         setOpen={setOpenEditModal}
         editLineItem={editLineItem}
       />
-      <Box direction="row" pad="medium" align="start">
+      <Box direction="row" pad="medium" align="start" wrap={true}>
         {open && (
           <Box pad="large">
             <Heading level="3">Open Proposal</Heading>
@@ -192,11 +199,21 @@ export const Proposals = () => {
                 resizeable
               />
             </Box>
-            <Button label="delete selected" onClick={deleteLineItem} />
-            <Button label="edit selected" onClick={setOpenEditModal} />
+            <Box direction="row" gap="small">
+              <Button
+                icon={<Trash />}
+                label="delete selected"
+                onClick={deleteLineItem}
+              />
+              <Button
+                icon={<Edit />}
+                label="edit margins of selected"
+                onClick={setOpenEditModal}
+              />
+            </Box>
           </Box>
         )}
-        <Box pad="large">
+        <Box margin="large" elevation="small">
           <DataTable
             columns={[
               ...customerColumns,
@@ -225,11 +242,13 @@ export const Proposals = () => {
               },
             ]}
             data={proposals}
+            background="background-front"
           />
         </Box>
       </Box>
-
-      <Button label="Start New Proposal" onClick={newProposal} />
+      <Box width="small">
+        <Button label="Start New Proposal" onClick={newProposal} primary />
+      </Box>
     </Box>
   );
 };
