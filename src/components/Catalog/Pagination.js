@@ -1,4 +1,7 @@
-import { Row, Col, Button, Input, CustomInput } from "reactstrap";
+import { Row, Col, Input, CustomInput } from "reactstrap";
+import { Box, Button, Select, Text, TextInput } from "grommet"
+import { CaretNext, CaretPrevious, ChapterNext, ChapterPrevious } from "grommet-icons"
+import { Switch } from "react-router-dom";
 
 export const Pagination = ({    canPreviousPage,
     canNextPage,
@@ -18,41 +21,42 @@ export const Pagination = ({    canPreviousPage,
         const page = event.target.value ? Number(event.target.value) - 1 : 0;
         gotoPage(page);
       };
+      console.log(pageSize)
     return(
-    <Row style={{ maxWidth: 1000, margin: "0 auto", textAlign: "center" }}>
-        <Col md={3}>
+    <Box direction="row" gap="small" align="center">
+        <Box direction="row" gap="xsmall">
           <Button
             color="primary"
             onClick={() => gotoPage(0)}
             disabled={!canPreviousPage}
           >
-            {"<<"}
+            <ChapterPrevious/>
           </Button>
           <Button
             color="primary"
             onClick={previousPage}
             disabled={!canPreviousPage}
           >
-            {"<"}
+            <CaretPrevious/>
           </Button>
-        </Col>
-        <Col md={2} style={{ marginTop: 7 }}>
+        </Box>
+        <Box direction="column" align="center">
+        <Text>
           Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>
-        </Col>
-        <Col md={2}>
-          <Input
+        </Text>
+          <TextInput
             type="number"
             min={1}
-            style={{ width: 70 }}
             max={pageOptions.length}
             defaultValue={pageIndex + 1}
             onChange={onChangeInInput}
           />
-        </Col>
+        </Box>
         <Col md={2}>
+
           <CustomInput
             type="select"
             value={pageSize}
@@ -64,19 +68,20 @@ export const Pagination = ({    canPreviousPage,
               </option>
             ))}
           </CustomInput>
+          {/* <Select type="select" value={pageSize} key={pageSize} onChange={onChangeInSelect}  options={[10, 20, 30, 40, 50]}/> */}
         </Col>
-        <Col md={3}>
+        <Box direction="row">
           <Button color="primary" onClick={nextPage} disabled={!canNextPage}>
-            {">"}
+            <CaretNext/>
           </Button>
           <Button
             color="primary"
             onClick={() => gotoPage(pageCount - 1)}
             disabled={!canNextPage}
           >
-            {">>"}
+            <ChapterNext/>
           </Button>
-        </Col>
-      </Row>
+        </Box>
+      </Box>
     )
 }

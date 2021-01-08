@@ -18,12 +18,17 @@ export const Proposals = () => {
     deleteProposalItem,
     createProposal,
   } = useContext(ProposalContext);
+  const { checked } = useContext(CatalogContext)
 
   const { patchItem } = useContext(CatalogContext);
 
   useEffect(() => {
     getProposals();
   }, []);
+
+  useEffect(() =>{
+    getSingleProposal(singleProposal.id)
+  },[checked])
 
   //CONDITIONALLY RENDERS THE OPEN PROPOSAL TABLE
   const [open, setOpen] = useState(false);
@@ -59,32 +64,32 @@ export const Proposals = () => {
   };
 
   //✅ CHECKBOX GLUE ✅
-  const [checked, setChecked] = useState([]);
+  const [proposalChecked, setProposalChecked] = useState([]);
 
   const onCheck = (event, value) => {
     if (event.target.checked) {
-      setChecked([...checked, value]);
+      setProposalChecked([...proposalChecked, value]);
     } else {
-      setChecked(checked.filter((item) => item !== value));
+      setProposalChecked(proposalChecked.filter((item) => item !== value));
     }
   };
   const onCheckAll = (event) =>
-    setChecked(
+  setProposalChecked(
       event.target.checked
         ? singleProposal.proposalitems.map((datum) => datum.id)
         : []
     );
 
   const deleteLineItem = () => {
-    checked.forEach((checkedLineItemId) => {
+    proposalChecked.forEach((checkedLineItemId) => {
       deleteProposalItem(checkedLineItemId);
     });
-    setChecked([]);
+    setProposalChecked([]);
     getSingleProposal(singleProposal.id);
   };
 
   const editLineItem = (margin) => {
-    checked.forEach((checkedLineItemId) => {
+    proposalChecked.forEach((checkedLineItemId) => {
       const matched = singleProposal.proposalitems.find(
         (proposalItem) => proposalItem.id === checkedLineItemId
       );
@@ -92,7 +97,7 @@ export const Proposals = () => {
       patchItem(updateObj);
     });
     setOpenEditModal(false);
-    setChecked([]);
+    setProposalChecked([]);
     getSingleProposal(singleProposal.id);
   };
 
@@ -161,18 +166,18 @@ export const Proposals = () => {
                     render: (datum) => (
                       <CheckBox
                         key={datum.id}
-                        checked={checked.indexOf(datum.id) !== -1}
+                        checked={proposalChecked.indexOf(datum.id) !== -1}
                         onChange={(e) => onCheck(e, datum.id)}
                       />
                     ),
                     header: (
                       <CheckBox
                         checked={
-                          checked.length === singleProposal.proposalitems.length
+                          proposalChecked.length === singleProposal.proposalitems.length
                         }
                         indeterminate={
-                          checked.length > 0 &&
-                          checked.length < singleProposal.proposalitems.length
+                          proposalChecked.length > 0 &&
+                          proposalChecked.length < singleProposal.proposalitems.length
                         }
                         onChange={onCheckAll}
                       />

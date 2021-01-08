@@ -55,6 +55,16 @@ export const CustomerProvider = (props) => {
     }).then(getCustomers);
   }
 
+  const deleteCustomer = (selectedCustomer) => {
+    return fetch(`http://127.0.0.1:8000/customers/${selectedCustomer}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+      body: JSON.stringify(selectedCustomer),
+    }).then(getCustomers);
+  };
+
 
   return (
     <CustomerContext.Provider
@@ -66,7 +76,8 @@ export const CustomerProvider = (props) => {
         getSingleCustomer,
         customerInfo,
         setCustomerInfo,
-        updateCustomer
+        updateCustomer,
+        deleteCustomer
       }}
     >
       {props.children}

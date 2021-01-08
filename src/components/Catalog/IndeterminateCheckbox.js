@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useRef } from "react";
+import { CheckBox } from "grommet";
 
 export const IndeterminateCheckbox = forwardRef(
     ({ indeterminate, ...rest }, ref) => {
@@ -11,7 +12,8 @@ export const IndeterminateCheckbox = forwardRef(
 
       return (
         <>
-          <input type="checkbox" ref={resolvedRef} {...rest} />
+          {/* <input type="checkbox" ref={resolvedRef} {...rest} /> */}
+          <CheckBox type="checkbox" ref={resolvedRef} {...rest} />
         </>
       );
     }

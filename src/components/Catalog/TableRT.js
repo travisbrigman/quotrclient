@@ -7,12 +7,19 @@ import {
   useRowSelect,
   useSortBy,
 } from "react-table";
+import MaUTable from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
 import { CatalogContext } from "./CatalogProvider.js";
 import { ProposalContext } from "../Proposals/ProposalProvider.js";
 import { DefaultColumnFilter, Filter } from "./FiltersRT";
 import { QuantityPopup } from "./QuantityPopup";
 import { IndeterminateCheckbox } from "./IndeterminateCheckbox";
 import { Pagination } from "./Pagination";
+import { Box } from "grommet";
+import { Ascend, Descend } from "grommet-icons";
 
 export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, setViewQuantityPopup }) => {
   const { addItemToProposal, status, setChecked, checked } = useContext(
@@ -79,7 +86,7 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
   const [quant, setQuant] = useState(0);
 
   const generateSortingIndicator = (column) => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
+    return column.isSorted ? (column.isSortedDesc ? <Descend/> : <Ascend/>) : "";
   };
   
   const checkedItems = selectedFlatRows.map((d) => {
@@ -125,37 +132,38 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
         setQuant={setQuant}
         approvedChecked={approvedChecked}
       />
-      <table {...getTableProps()}>
-        <thead>
+      <Box direction="column" align="center">
+      <MaUTable {...getTableProps()}>
+        <TableHead>
           {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <TableRow {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>
-                  <div {...column.getSortByToggleProps()}>
+                <TableCell {...column.getHeaderProps()}>
+                  <Box {...column.getSortByToggleProps()}>
                     {column.render("Header")}
                     {generateSortingIndicator(column)}
-                  </div>
+                  </Box>
                   <Filter column={column} />
-                </th>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
+        </TableHead>
+        <TableBody {...getTableBodyProps()}>
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <TableRow {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    <TableCell {...cell.getCellProps()}>{cell.render("Cell")}</TableCell>
                   );
                 })}
-              </tr>
+              </TableRow>
             );
           })}
-        </tbody>
-      </table>
+        </TableBody>
+      </MaUTable>
       <br />
 
       <Pagination
@@ -170,6 +178,7 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
         pageIndex={pageIndex}
         pageSize={pageSize}
       />
+      </Box>
     </>
   );
 };

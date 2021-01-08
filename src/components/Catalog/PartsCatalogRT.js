@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Box, Button, Heading, Text } from "grommet";
-import { Compliance } from "grommet-icons";
+import { Compliance, Down, Next } from "grommet-icons";
 import { CatalogContext } from "./CatalogProvider";
 import { Styles } from "./StylesRT";
 import { TableModule } from "./TableRT";
@@ -75,7 +75,7 @@ console.log("accessoryArray->",accessoryArray);
         id: "expander", // Make sure it has an ID
         Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
           <span {...getToggleAllRowsExpandedProps()}>
-            {isAllRowsExpanded ? "👇" : "👉"}
+            {isAllRowsExpanded ? <Down/> : <Next/>}
           </span>
         ),
         Cell: ({ row }) =>
@@ -92,7 +92,7 @@ console.log("accessoryArray->",accessoryArray);
                 },
               })}
             >
-              {row.isExpanded ? "👇" : "👉"}
+              {row.isExpanded ? <Down/> : <Next/>}
             </span>
           ) : null,
       },
@@ -152,7 +152,7 @@ console.log("accessoryArray->",accessoryArray);
             <Text>Select Accessories</Text>
           )}
 
-      <Styles>
+      {/* <Styles> */}
         <Box width="small">
           <Button
             primary
@@ -170,7 +170,7 @@ console.log("accessoryArray->",accessoryArray);
           viewQuantityPopup={viewQuantityPopup}
           setViewQuantityPopup={setViewQuantityPopup}
         />
-      </Styles>
+      {/* </Styles> */}
     </>
   );
 };

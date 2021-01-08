@@ -10,8 +10,6 @@ export const ProposalProvider = (props) => {
   });
   
 
-  
-
   const getProposals = () => {
     return fetch("http://127.0.0.1:8000/proposals", {
       headers: {
@@ -32,6 +30,16 @@ export const ProposalProvider = (props) => {
       .then((res) => res.json())
       .then(setSingleProposal);
   };
+
+  const getProposalsByCustomer = (customerId) => {
+    return fetch(`http://127.0.0.1:8000/proposals?customer_id=${customerId}`, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then(setProposals);
+  }
   
 
   const deleteProposal = (selectedProposal) => {
@@ -78,6 +86,7 @@ export const ProposalProvider = (props) => {
         deleteProposal,
         deleteProposalItem,
         createProposal,
+        getProposalsByCustomer
       }}
     >
       {props.children}

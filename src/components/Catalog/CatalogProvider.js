@@ -1,12 +1,18 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { ProposalContext } from "../Proposals/ProposalProvider";
 
 export const CatalogContext = createContext();
 
 export const CatalogProvider = (props) => {
+
+  const { getSingleProposal } = useContext(ProposalContext)
+
   const [items, setItems] = useState([]);
   const [singleItem, setSingleItem] = useState({});
   const [checked, setChecked] = useState([]);
   const [status, setStatus ] = useState(false)
+
+  
   // const [searchTerms, setTerms ] = useState('')
   const [valueMultiple, setValueMultiple] = useState([]);
   const [accessoryArray, setAccessoryArray] = useState([]);
@@ -59,6 +65,7 @@ export const CatalogProvider = (props) => {
       setStatus(res.ok)
       res.json()
     })
+    .then(getSingleProposal(proposalItem.proposal_id))
   };
 
   const patchItem = (itemObject) => {

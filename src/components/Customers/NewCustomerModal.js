@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -9,6 +9,8 @@ import {
   TextInput,
 } from "grommet";
 import { CustomerContext } from "./CustomerProvider";
+import { ProposalContext } from "../Proposals/ProposalProvider";
+import { CantDelete } from "./CantDelete";
 
 export const NewCustomerModal = (
   { open, onClose, editMode, setEditMode, customerId },
@@ -20,7 +22,14 @@ export const NewCustomerModal = (
     customerInfo,
     setCustomerInfo,
     updateCustomer,
+    deleteCustomer,
   } = useContext(CustomerContext);
+
+  const { getProposalsByCustomer, proposals, setProposals } = useContext(
+    ProposalContext
+  );
+
+  const [viewCantDelete, setViewCantDelete] = useState(false);
 
   function handleChange(evt) {
     const value = evt.target.value;
@@ -41,7 +50,7 @@ export const NewCustomerModal = (
         organization: customerInfo.organization,
       }).then(setCustomerInfo({}));
       setEditMode(false);
-      onClose()
+      onClose();
     } else {
       //TODO: This doesnt really work. fix to handle errors better
       if (Object.values(customerInfo).length === 0) {
@@ -54,8 +63,24 @@ export const NewCustomerModal = (
     }
   };
 
-  const modalMessage = (editMode) ? "Edit Customer Info" : "Create New Customer"
-  const buttonText = (editMode) ? "Update" : "Create"
+  const deleteClicked = () => {
+    getProposalsByCustomer(customerId)
+    .then( () => {
+
+      if (proposals.length === 0) {
+        deleteCustomer(customerId);
+        onClose();
+      } else {
+        setViewCantDelete(true);
+      }
+    }
+    )
+
+    setProposals([]);
+  };
+
+  const modalMessage = editMode ? "Edit Customer Info" : "Create New Customer";
+  const buttonText = editMode ? "Update" : "Create";
   return (
     <>
       {open && (
@@ -65,6 +90,10 @@ export const NewCustomerModal = (
           responsive={true}
           position="center"
         >
+          <CantDelete
+            viewCantDelete={viewCantDelete}
+            setViewCantDelete={setViewCantDelete}
+          />
           <Box margin="xsmall">
             <Heading margin="xsmall" level="3">
               {modalMessage}
@@ -114,6 +143,16 @@ export const NewCustomerModal = (
                 label="Cancel"
                 onClick={onClose}
               />
+              {editMode && (
+                <Button
+                  secondary
+                  margin="small"
+                  label="delete"
+                  onClick={() => {
+                    deleteClicked();
+                  }}
+                />
+              )}
             </Box>
           </Box>
         </Layer>
