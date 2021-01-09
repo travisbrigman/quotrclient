@@ -7,11 +7,11 @@ import {
   useRowSelect,
   useSortBy,
 } from "react-table";
-import MaUTable from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
+import MaUTable from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 import { CatalogContext } from "./CatalogProvider.js";
 import { ProposalContext } from "../Proposals/ProposalProvider.js";
 import { DefaultColumnFilter, Filter } from "./FiltersRT";
@@ -21,7 +21,15 @@ import { Pagination } from "./Pagination";
 import { Box } from "grommet";
 import { Ascend, Descend } from "grommet-icons";
 
-export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, setViewQuantityPopup }) => {
+export const TableModule = ({
+  columns: userColumns,
+  data,
+  viewQuantityPopup,
+  setViewQuantityPopup,
+  fetchData,
+  loading,
+  pageCount: controlledPageCount,
+}) => {
   const { addItemToProposal, status, setChecked, checked } = useContext(
     CatalogContext
   );
@@ -50,7 +58,10 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
       columns: userColumns,
       data,
       defaultColumn: { Filter: DefaultColumnFilter },
-      initialState: { pageIndex: 0, pageSize: 10 },
+      initialState: { pageIndex: 0 },
+      manualPagination: true,
+      pageCount: controlledPageCount,
+      // initialState: { pageIndex: 0, pageSize: 10 },
       getSubRows: (row) => row.accessories?.map((a) => a.accessory) || [],
     },
     useFilters,
@@ -83,20 +94,34 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     }
   );
 
+
+
+  // useEffect(() => {
+  //   fetchData({ pageIndex, pageSize });
+  // }, [fetchData, pageIndex, pageSize]);
+
   const [quant, setQuant] = useState(0);
 
   const generateSortingIndicator = (column) => {
-    return column.isSorted ? (column.isSortedDesc ? <Descend/> : <Ascend/>) : "";
+    return column.isSorted ? (
+      column.isSortedDesc ? (
+        <Descend />
+      ) : (
+        <Ascend />
+      )
+    ) : (
+      ""
+    );
   };
-  
+
   const checkedItems = selectedFlatRows.map((d) => {
     return d.original.id;
   });
-  
-  useEffect(()=>{
-      setChecked(checkedItems)
-  },[selectedRowIds])
-  
+
+  useEffect(() => {
+    setChecked(checkedItems);
+  }, [selectedRowIds]);
+
   const quantityMultiplier = (array, quantity) => {
     var newArray = [];
     for (let iteration = 0; iteration < quantity; iteration++) {
@@ -107,21 +132,18 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
     });
     return newArray;
   };
-  
+
   let checkedWithQuantity = quantityMultiplier(checked, quant);
-  
+
   const approvedChecked = () => {
     checkedWithQuantity.forEach((selectedItems) => {
       addItemToProposal({
         item_id: selectedItems,
         proposal_id: singleProposal.id,
       }).then(console.log(status));
-      
     });
-    toggleAllRowsSelected(false)
+    toggleAllRowsSelected(false);
   };
-  
-
 
   return (
     <>
@@ -133,51 +155,64 @@ export const TableModule = ({ columns: userColumns, data, viewQuantityPopup, set
         approvedChecked={approvedChecked}
       />
       <Box direction="column" align="center">
-      <MaUTable {...getTableProps()}>
-        <TableHead>
-          {headerGroups.map((headerGroup) => (
-            <TableRow {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <TableCell {...column.getHeaderProps()}>
-                  <Box {...column.getSortByToggleProps()}>
-                    {column.render("Header")}
-                    {generateSortingIndicator(column)}
-                  </Box>
-                  <Filter column={column} />
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableHead>
-        <TableBody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <TableRow {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <TableCell {...cell.getCellProps()}>{cell.render("Cell")}</TableCell>
-                  );
-                })}
+        <MaUTable {...getTableProps()}>
+          <TableHead>
+            {headerGroups.map((headerGroup) => (
+              <TableRow {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <TableCell {...column.getHeaderProps()}>
+                    <Box {...column.getSortByToggleProps()}>
+                      {column.render("Header")}
+                      {generateSortingIndicator(column)}
+                    </Box>
+                    <Filter column={column} />
+                  </TableCell>
+                ))}
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </MaUTable>
-      <br />
+            ))}
+          </TableHead>
+          <TableBody {...getTableBodyProps()}>
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <TableRow {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <TableCell {...cell.getCellProps()}>
+                        {cell.render("Cell")}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+            <tr>
+            {loading ? (
+              // Use our custom loading state to show a loading indicator
+              <td colSpan="10000">Loading...</td>
+            ) : (
+              <td colSpan="10000">
+                Showing {page.length} of ~{controlledPageCount * pageSize}{' '}
+                results
+              </td>
+            )}
+          </tr>
+          </TableBody>
+        </MaUTable>
+        <br />
 
-      <Pagination
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        pageOptions={pageOptions}
-        pageCount={pageCount}
-        gotoPage={gotoPage}
-        nextPage={nextPage}
-        previousPage={previousPage}
-        setPageSize={setPageSize}
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-      />
+        <Pagination
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          gotoPage={gotoPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          setPageSize={setPageSize}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+        />
       </Box>
     </>
   );

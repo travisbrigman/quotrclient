@@ -14,11 +14,12 @@ export const Proposals = () => {
     proposals,
     getSingleProposal,
     singleProposal,
+    setSingleProposal,
     deleteProposal,
     deleteProposalItem,
     createProposal,
   } = useContext(ProposalContext);
-  const { checked } = useContext(CatalogContext)
+  const { checked } = useContext(CatalogContext);
 
   const { patchItem } = useContext(CatalogContext);
 
@@ -26,9 +27,11 @@ export const Proposals = () => {
     getProposals();
   }, []);
 
-  useEffect(() =>{
-    getSingleProposal(singleProposal.id)
-  },[checked])
+  useEffect(() => {
+    if (singleProposal.id !== undefined) {
+      getSingleProposal(singleProposal.id);
+    }
+  }, [checked, proposals]);
 
   //CONDITIONALLY RENDERS THE OPEN PROPOSAL TABLE
   const [open, setOpen] = useState(false);
@@ -48,10 +51,9 @@ export const Proposals = () => {
     createProposal(propObject);
   };
 
-  if (singleProposal.proposalitems.length !== 0 && open !== true){
-    setOpen(true)
+  if (singleProposal.id !== undefined && open !== true) {
+    setOpen(true);
   }
-  
 
   //𝒇𝒇𝒇 FUNCTIONS FOR PROPOSAL LIST ACTIONS 𝒇𝒇𝒇
   const displayProposal = (singleProposalId) => {
@@ -60,7 +62,11 @@ export const Proposals = () => {
   };
 
   const deleteSingleProposal = (proposalToDelete) => {
+    setOpen(false)
     deleteProposal(proposalToDelete);
+    if (singleProposal.id === proposalToDelete) {
+      setSingleProposal([]);
+    }
   };
 
   //✅ CHECKBOX GLUE ✅
@@ -74,7 +80,7 @@ export const Proposals = () => {
     }
   };
   const onCheckAll = (event) =>
-  setProposalChecked(
+    setProposalChecked(
       event.target.checked
         ? singleProposal.proposalitems.map((datum) => datum.id)
         : []
@@ -173,11 +179,13 @@ export const Proposals = () => {
                     header: (
                       <CheckBox
                         checked={
-                          proposalChecked.length === singleProposal.proposalitems.length
+                          proposalChecked.length ===
+                          singleProposal.proposalitems.length
                         }
                         indeterminate={
                           proposalChecked.length > 0 &&
-                          proposalChecked.length < singleProposal.proposalitems.length
+                          proposalChecked.length <
+                            singleProposal.proposalitems.length
                         }
                         onChange={onCheckAll}
                       />

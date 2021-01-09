@@ -1,8 +1,7 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Box, Button, Heading, Text } from "grommet";
 import { Compliance, Down, Next } from "grommet-icons";
 import { CatalogContext } from "./CatalogProvider";
-import { Styles } from "./StylesRT";
 import { TableModule } from "./TableRT";
 import { AddCatalogItem } from "./AddCatalogItem";
 
@@ -11,6 +10,37 @@ export const PartsCatalogRT = (props) => {
 
   const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
 
+  // const [data, setData] = useState([])
+  // const [loading, setLoading] = useState(false)
+  // const [pageCount, setPageCount] = useState(0)
+  // const fetchIdRef = useRef(0)
+/*
+  const fetchData = useCallback(({ pageSize, pageIndex }) => {
+    // This will get called when the table needs new data
+    // You could fetch your data from literally anywhere,
+    // even a server. But for this example, we'll just fake it.
+
+    // Give this fetch an ID
+    const fetchId = ++fetchIdRef.current
+
+    // Set the loading state
+    setLoading(true)
+
+
+      // Only update the data if this is the latest fetch
+      if (fetchId === fetchIdRef.current) {
+        const startRow = pageSize * pageIndex
+        const endRow = startRow + pageSize
+        setData(serverData.slice(startRow, endRow))
+
+        // Your server could send back total page count.
+        // For now we'll just fake it, too
+        setPageCount(Math.ceil(serverData.length / pageSize))
+
+        setLoading(false)
+      }
+  }, [])
+*/
 
   /*
   click on add accessories
@@ -169,6 +199,9 @@ console.log("accessoryArray->",accessoryArray);
           data={data}
           viewQuantityPopup={viewQuantityPopup}
           setViewQuantityPopup={setViewQuantityPopup}
+          // loading={loading}
+          // pageCount={pageCount}
+          // fetchData={fetchData}
         />
       {/* </Styles> */}
     </>

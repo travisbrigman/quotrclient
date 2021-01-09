@@ -70,7 +70,7 @@ export const NewCustomerModal = (
       if (proposals.length === 0) {
         deleteCustomer(customerId);
         onClose();
-      } else {
+      } else if (proposals.indexOf(customerId)) {
         setViewCantDelete(true);
       }
     }
