@@ -1,7 +1,6 @@
 import { Row, Col, Input, CustomInput } from "reactstrap";
 import { Box, Button, Select, Text, TextInput } from "grommet"
 import { CaretNext, CaretPrevious, ChapterNext, ChapterPrevious } from "grommet-icons"
-import { Switch } from "react-router-dom";
 
 export const Pagination = ({    canPreviousPage,
     canNextPage,
@@ -21,7 +20,6 @@ export const Pagination = ({    canPreviousPage,
         const page = event.target.value ? Number(event.target.value) - 1 : 0;
         gotoPage(page);
       };
-      console.log(pageSize)
     return(
     <Box direction="row" gap="small" align="center">
         <Box direction="row" gap="xsmall">

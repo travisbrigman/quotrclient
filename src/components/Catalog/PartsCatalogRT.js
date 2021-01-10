@@ -1,46 +1,58 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Box, Button, Heading, Text } from "grommet";
 import { Compliance, Down, Next } from "grommet-icons";
 import { CatalogContext } from "./CatalogProvider";
 import { TableModule } from "./TableRT";
-import { AddCatalogItem } from "./AddCatalogItem";
 
 export const PartsCatalogRT = (props) => {
-  const { getItems, items, checked, setChecked, createAccessory, setAccessoryArray, accessoryArray, setAddAccessoryState, addAccessoryState } = useContext(CatalogContext);
+  const {
+    getItems,
+    items,
+    checked,
+    setChecked,
+    createAccessory,
+    setAccessoryArray,
+    accessoryArray,
+    setAddAccessoryState,
+    addAccessoryState,
+    getItemsByPage,
+  } = useContext(CatalogContext);
 
   const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
 
-  // const [data, setData] = useState([])
-  // const [loading, setLoading] = useState(false)
-  // const [pageCount, setPageCount] = useState(0)
-  // const fetchIdRef = useRef(0)
-/*
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const fetchIdRef = useRef(0);
+
   const fetchData = useCallback(({ pageSize, pageIndex }) => {
     // This will get called when the table needs new data
-    // You could fetch your data from literally anywhere,
-    // even a server. But for this example, we'll just fake it.
-
+    getItemsByPage(pageSize, pageIndex);
     // Give this fetch an ID
-    const fetchId = ++fetchIdRef.current
+    const fetchId = ++fetchIdRef.current;
 
     // Set the loading state
-    setLoading(true)
+    setLoading(true);
 
+    // Only update the data if this is the latest fetch
+    if (fetchId === fetchIdRef.current) {
+      const startRow = pageSize * pageIndex;
+      const endRow = startRow + pageSize;
+      setData(items.results);
 
-      // Only update the data if this is the latest fetch
-      if (fetchId === fetchIdRef.current) {
-        const startRow = pageSize * pageIndex
-        const endRow = startRow + pageSize
-        setData(serverData.slice(startRow, endRow))
+      // Your server could send back total page count.
+      // setPageCount(Math.ceil(callData.results.length / pageSize))
 
-        // Your server could send back total page count.
-        // For now we'll just fake it, too
-        setPageCount(Math.ceil(serverData.length / pageSize))
-
-        setLoading(false)
-      }
-  }, [])
-*/
+      setLoading(false);
+    }
+  }, []);
 
   /*
   click on add accessories
@@ -51,32 +63,27 @@ export const PartsCatalogRT = (props) => {
   add that item to accessory object as 'accessory'
   send POST request
   */
- 
-// const [accessorizedItem, setAccessorizedItem] = useState(0)
 
-const accessorizedItem = useRef()
-useEffect(() => {
+  // const [accessorizedItem, setAccessorizedItem] = useState(0)
 
-  if (addAccessoryState) {
-  //  setAccessorizedItem(checked[0])
-  accessorizedItem.current = checked[0]
-  }
-  if (addAccessoryState && accessorizedItem !== 0){
-   setAccessoryArray(checked)
-  }
-},[addAccessoryState, checked])
-
-console.log("checked->",checked);
-console.log("accessorizedItem->",accessorizedItem);
-console.log("accessoryArray->",accessoryArray);
+  const accessorizedItem = useRef();
+  useEffect(() => {
+    if (addAccessoryState) {
+      //  setAccessorizedItem(checked[0])
+      accessorizedItem.current = checked[0];
+    }
+    if (addAccessoryState && accessorizedItem !== 0) {
+      setAccessoryArray(checked);
+    }
+  }, [addAccessoryState, checked]);
 
   //get the array of catalog items from the database
-  useEffect(() => {
-    getItems();
-  }, []);
+  // useEffect(() => {
+  //   getItems();
+  // }, []);
 
   //put the items in a useMemo as "required" by React-Table 7
-  const data = useMemo(() => items, [items]);
+  // const data = useMemo(() => items, [items]);
 
   //little helper function to convert ISO 8601 to MM/DD/YYYY
   const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
@@ -105,7 +112,7 @@ console.log("accessoryArray->",accessoryArray);
         id: "expander", // Make sure it has an ID
         Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
           <span {...getToggleAllRowsExpandedProps()}>
-            {isAllRowsExpanded ? <Down/> : <Next/>}
+            {isAllRowsExpanded ? <Down /> : <Next />}
           </span>
         ),
         Cell: ({ row }) =>
@@ -122,7 +129,7 @@ console.log("accessoryArray->",accessoryArray);
                 },
               })}
             >
-              {row.isExpanded ? <Down/> : <Next/>}
+              {row.isExpanded ? <Down /> : <Next />}
             </span>
           ) : null,
       },
@@ -154,56 +161,59 @@ console.log("accessoryArray->",accessoryArray);
     []
   );
 
-    const makeAccessories = () =>{
-      accessoryArray.forEach(acc => {
-        const accessoryItem = {
-          item: accessorizedItem.current,
-          accessory: acc
-        }
-        createAccessory(accessoryItem)
-      })
-      setAddAccessoryState(false)
-    }
+  const makeAccessories = () => {
+    accessoryArray.forEach((acc) => {
+      const accessoryItem = {
+        item: accessorizedItem.current,
+        accessory: acc,
+      };
+      createAccessory(accessoryItem);
+    });
+    setAddAccessoryState(false);
+  };
 
   return (
     <>
-          {addAccessoryState && (
-            <Box>
+      {addAccessoryState && (
+        <Box>
           <Heading>Add Accessories</Heading>
-          <Button label="make accessories" onClick={() => { makeAccessories() }}/>
-          </Box>
-          )}
-          {(accessorizedItem !== 0) && addAccessoryState && (
-            <Box>
-              <Text>Select an Item to add an accessory to</Text>
-            </Box>
-          )}
-          {addAccessoryState && (accessorizedItem > 0) && (
-            <Text>Select Accessories</Text>
-          )}
-
-      {/* <Styles> */}
-        <Box width="small">
           <Button
-            primary
-            label="Add to Proposal"
-            icon={<Compliance />}
+            label="make accessories"
             onClick={() => {
-              setViewQuantityPopup(true);
+              makeAccessories();
             }}
-            margin="small"
           />
         </Box>
-        <TableModule
-          columns={columns}
-          data={data}
-          viewQuantityPopup={viewQuantityPopup}
-          setViewQuantityPopup={setViewQuantityPopup}
-          // loading={loading}
-          // pageCount={pageCount}
-          // fetchData={fetchData}
+      )}
+      {accessorizedItem !== 0 && addAccessoryState && (
+        <Box>
+          <Text>Select an Item to add an accessory to</Text>
+        </Box>
+      )}
+      {addAccessoryState && accessorizedItem > 0 && (
+        <Text>Select Accessories</Text>
+      )}
+
+      <Box width="small">
+        <Button
+          primary
+          label="Add to Proposal"
+          icon={<Compliance />}
+          onClick={() => {
+            setViewQuantityPopup(true);
+          }}
+          margin="small"
         />
-      {/* </Styles> */}
+      </Box>
+      <TableModule
+        columns={columns}
+        data={data}
+        viewQuantityPopup={viewQuantityPopup}
+        setViewQuantityPopup={setViewQuantityPopup}
+        loading={loading}
+        pageCount={pageCount}
+        fetchData={fetchData}
+      />
     </>
   );
 };

@@ -39,7 +39,6 @@ export const TableModule = ({
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    // rows,
     page,
     prepareRow,
     canPreviousPage,
@@ -95,10 +94,9 @@ export const TableModule = ({
   );
 
 
-
-  // useEffect(() => {
-  //   fetchData({ pageIndex, pageSize });
-  // }, [fetchData, pageIndex, pageSize]);
+  useEffect(() => {
+    fetchData({ pageIndex, pageSize });
+  }, [fetchData, pageIndex, pageSize]);
 
   const [quant, setQuant] = useState(0);
 
@@ -144,7 +142,6 @@ export const TableModule = ({
     });
     toggleAllRowsSelected(false);
   };
-
   return (
     <>
       <QuantityPopup
@@ -218,23 +215,3 @@ export const TableModule = ({
   );
 };
 
-/*
-      <pre>
-        <code>{JSON.stringify({ expanded: expanded }, null, 2)}</code>
-        <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
-        <pre>
-          <code>
-            {JSON.stringify(
-              {
-                selectedRowIds: selectedRowIds,
-                "selectedFlatRows[].original": selectedFlatRows.map(
-                  (d) => d.original
-                ),
-              },
-              null,
-              2
-            )}
-          </code>
-        </pre>
-      </pre>
-*/

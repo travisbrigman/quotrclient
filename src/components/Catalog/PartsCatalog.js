@@ -49,9 +49,9 @@ export const PartsCatalog = (props) => {
   const onCheckAll = (event) =>
     setChecked(event.target.checked ? items.map((datum) => datum.id) : []);
 
-  useEffect(() => {
-    getItems();
-  }, []);
+  // useEffect(() => {
+  //   getItems();
+  // }, []);
 
   const quantityMultiplier = (array, quantity) => {
     var newArray = [];

@@ -7,13 +7,13 @@ export const CatalogProvider = (props) => {
 
   const { getSingleProposal } = useContext(ProposalContext)
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState({results: []});
   const [singleItem, setSingleItem] = useState({});
   const [checked, setChecked] = useState([]);
   const [status, setStatus ] = useState(false)
+  console.log(items)
 
-  
-  // const [searchTerms, setTerms ] = useState('')
+
   const [valueMultiple, setValueMultiple] = useState([]);
   const [accessoryArray, setAccessoryArray] = useState([]);
   const [addAccessoryState, setAddAccessoryState] = useState(false);
@@ -31,6 +31,15 @@ export const CatalogProvider = (props) => {
 
   const getItemsByMake = (make) => {
     return fetch(`http://127.0.0.1:8000/items?make=${make}`, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then(setItems);
+  };
+  const getItemsByPage = (pageSize, pageIndex) => {
+    return fetch(`http://127.0.0.1:8000/items?limit=${pageSize}&offset=${pageIndex}`, {
       headers: {
         Authorization: `Token ${localStorage.getItem("quotr_user_id")}`,
       },
@@ -140,8 +149,6 @@ export const CatalogProvider = (props) => {
         setChecked,
         status,
         setStatus,
-        // searchTerms,
-        // setTerms,
         valueMultiple,
         setValueMultiple,
         getItemsByMake,
@@ -150,7 +157,8 @@ export const CatalogProvider = (props) => {
         setAccessoryArray,
         accessoryArray,
         setAddAccessoryState,
-        addAccessoryState
+        addAccessoryState,
+        getItemsByPage
       }}
     >
       {props.children}

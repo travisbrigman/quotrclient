@@ -12,7 +12,6 @@ export const IndeterminateCheckbox = forwardRef(
 
       return (
         <>
-          {/* <input type="checkbox" ref={resolvedRef} {...rest} /> */}
           <CheckBox type="checkbox" ref={resolvedRef} {...rest} />
         </>
       );
