@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { ProposalContext } from "../Proposals/ProposalProvider";
 
 export const CatalogContext = createContext();
@@ -7,12 +7,12 @@ export const CatalogProvider = (props) => {
 
   const { getSingleProposal } = useContext(ProposalContext)
 
-  const [items, setItems] = useState({results: []});
+  const [items, setItems] = useState();
+  const [data, setData] = useState([]);
   const [singleItem, setSingleItem] = useState({});
   const [checked, setChecked] = useState([]);
   const [status, setStatus ] = useState(false)
-  console.log(items)
-
+  const [pageCount, setPageCount] = useState(0);
 
   const [valueMultiple, setValueMultiple] = useState([]);
   const [accessoryArray, setAccessoryArray] = useState([]);
@@ -45,7 +45,9 @@ export const CatalogProvider = (props) => {
       },
     })
       .then((res) => res.json())
-      .then(setItems);
+      .then(res => {setData(res.results)
+      setPageCount(Math.ceil(res.count/pageSize))
+      });
   };
 
   const getSingleItem = (itemId) => {
@@ -158,7 +160,10 @@ export const CatalogProvider = (props) => {
         accessoryArray,
         setAddAccessoryState,
         addAccessoryState,
-        getItemsByPage
+        getItemsByPage,
+        data,
+        setData,
+        pageCount,
       }}
     >
       {props.children}

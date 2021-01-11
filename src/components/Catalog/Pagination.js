@@ -32,7 +32,7 @@ export const Pagination = ({    canPreviousPage,
           </Button>
           <Button
             color="primary"
-            onClick={previousPage}
+            onClick={()=> previousPage()}
             disabled={!canPreviousPage}
           >
             <CaretPrevious/>
@@ -69,7 +69,9 @@ export const Pagination = ({    canPreviousPage,
           {/* <Select type="select" value={pageSize} key={pageSize} onChange={onChangeInSelect}  options={[10, 20, 30, 40, 50]}/> */}
         </Col>
         <Box direction="row">
-          <Button color="primary" onClick={nextPage} disabled={!canNextPage}>
+          <Button color="primary" 
+          onClick={() => nextPage()}
+           disabled={!canNextPage}>
             <CaretNext/>
           </Button>
           <Button

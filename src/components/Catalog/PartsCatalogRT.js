@@ -23,33 +23,29 @@ export const PartsCatalogRT = (props) => {
     setAddAccessoryState,
     addAccessoryState,
     getItemsByPage,
+    data,
+    setData,
+    pageCount,
+    skipPageResetRef
   } = useContext(CatalogContext);
 
   const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
 
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [pageCount, setPageCount] = useState(0);
-  const fetchIdRef = useRef(0);
+  const fetchIdRef = useRef(0)
 
   const fetchData = useCallback(({ pageSize, pageIndex }) => {
     // This will get called when the table needs new data
-    getItemsByPage(pageSize, pageIndex);
     // Give this fetch an ID
     const fetchId = ++fetchIdRef.current;
-
+    
     // Set the loading state
     setLoading(true);
-
+    console.log(fetchId);
+    
     // Only update the data if this is the latest fetch
     if (fetchId === fetchIdRef.current) {
-      const startRow = pageSize * pageIndex;
-      const endRow = startRow + pageSize;
-      setData(items.results);
-
-      // Your server could send back total page count.
-      // setPageCount(Math.ceil(callData.results.length / pageSize))
-
+      getItemsByPage(pageSize, pageIndex);
       setLoading(false);
     }
   }, []);

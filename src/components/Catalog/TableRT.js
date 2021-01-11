@@ -30,9 +30,13 @@ export const TableModule = ({
   loading,
   pageCount: controlledPageCount,
 }) => {
-  const { addItemToProposal, status, setChecked, checked } = useContext(
+  const { addItemToProposal, status, setChecked, checked, } = useContext(
     CatalogContext
   );
+
+ 
+
+  
 
   const { singleProposal } = useContext(ProposalContext);
   const {
@@ -60,8 +64,14 @@ export const TableModule = ({
       initialState: { pageIndex: 0 },
       manualPagination: true,
       pageCount: controlledPageCount,
-      // initialState: { pageIndex: 0, pageSize: 10 },
       getSubRows: (row) => row.accessories?.map((a) => a.accessory) || [],
+      autoResetPage: false,
+      autoResetExpanded: false,
+      autoResetGroupBy: false,
+      autoResetSelectedRows: false,
+      autoResetSortBy: false,
+      autoResetFilters: false,
+      autoResetRowState: false,
     },
     useFilters,
     useSortBy,
@@ -92,7 +102,6 @@ export const TableModule = ({
       ]);
     }
   );
-
 
   useEffect(() => {
     fetchData({ pageIndex, pageSize });
