@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Box, ResponsiveContext } from "grommet";
 
+//sets constraints for the main app view
 export const AppContainer = ({ ...rest }) => {
   const size = useContext(ResponsiveContext);
 

@@ -2,8 +2,10 @@ import { Box, Button } from "grommet";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserProvider.js";
 
+// pretty much empty user profile page
+
 export const Users = () => {
-  const { currentUser, getUsers, getCurrentUser, users, patchUser } = useContext(
+  const { currentUser, getUsers, getCurrentUser, patchUser } = useContext(
     UserContext
   );
 

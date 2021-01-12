@@ -1,5 +1,6 @@
 import { Box, Button, Layer, Text, MaskedInput } from "grommet";
 import { FormClose, Send } from "grommet-icons";
+//popup to add quantity of selected item
 
 export const QuantityPopup = ({
   viewQuantityPopup,
@@ -18,7 +19,6 @@ export const QuantityPopup = ({
         <Layer
           position="center"
           modal={true}
-          // margin={{ vertical: "medium", horizontal: "small" }}
           onEsc={() => {
             setViewQuantityPopup(false);
           }}
@@ -36,23 +36,27 @@ export const QuantityPopup = ({
             elevation="medium"
             pad={{ vertical: "xsmall", horizontal: "small" }}
           >
-            <Box align="center" direction="row" gap="xsmall">
-              <Text>How many of each checked item</Text>
+            <Box align="center" direction="column" gap="xsmall" pad="small">
+              <Text>How many of each checked item?</Text>
               <MaskedInput
                 name="value"
                 mask={[{ regexp: /^\d{1,3}$/ }]}
-                //   value={quantity}
                 onChange={(event) => setQuant(event.target.value)}
               />
             </Box>
-            <Box direction="row">
-              <Button icon={<Send />} onClick={handleClick} />
+            <Box direction="row" gap="xsmall">
               <Button
+                label="add to proposal"
+                icon={<Send />}
+                onClick={handleClick}
+                primary
+              />
+              <Button
+                label="cancel"
                 icon={<FormClose />}
                 onClick={() => {
                   setViewQuantityPopup(false);
                 }}
-                plain
               />
             </Box>
           </Box>

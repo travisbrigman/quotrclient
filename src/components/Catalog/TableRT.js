@@ -30,13 +30,9 @@ export const TableModule = ({
   loading,
   pageCount: controlledPageCount,
 }) => {
-  const { addItemToProposal, status, setChecked, checked, } = useContext(
+  const { addItemToProposal, setChecked, checked, } = useContext(
     CatalogContext
   );
-
- 
-
-  
 
   const { singleProposal } = useContext(ProposalContext);
   const {
@@ -55,7 +51,7 @@ export const TableModule = ({
     setPageSize,
     selectedFlatRows,
     toggleAllRowsSelected,
-    state: { pageIndex, pageSize, expanded, selectedRowIds },
+    state: { pageIndex, pageSize, selectedRowIds },
   } = useTable(
     {
       columns: userColumns,
@@ -103,12 +99,15 @@ export const TableModule = ({
     }
   );
 
+  //this watches for changes to the table and fetches new data if the pageSize, page, or data changes
   useEffect(() => {
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
 
+  //gets the quantity from the quantity popup
   const [quant, setQuant] = useState(0);
 
+  //little function to create sorting caret symbols
   const generateSortingIndicator = (column) => {
     return column.isSorted ? (
       column.isSortedDesc ? (
@@ -121,14 +120,17 @@ export const TableModule = ({
     );
   };
 
+  //this gets the array of checked item ids
   const checkedItems = selectedFlatRows.map((d) => {
     return d.original.id;
   });
 
+  //watches if an item has been checked. if so, updates the checked state variable with whatever is checkedItems
   useEffect(() => {
     setChecked(checkedItems);
   }, [selectedRowIds]);
 
+  //this takes the quant state variable, and the checked array and multiplies everything in the array then sorts it
   const quantityMultiplier = (array, quantity) => {
     var newArray = [];
     for (let iteration = 0; iteration < quantity; iteration++) {
@@ -142,12 +144,13 @@ export const TableModule = ({
 
   let checkedWithQuantity = quantityMultiplier(checked, quant);
 
+  //Iterate through the above created array and post to proposalItem table
   const approvedChecked = () => {
     checkedWithQuantity.forEach((selectedItems) => {
       addItemToProposal({
         item_id: selectedItems,
         proposal_id: singleProposal.id,
-      }).then(console.log(status));
+      })
     });
     toggleAllRowsSelected(false);
   };
@@ -192,17 +195,17 @@ export const TableModule = ({
                 </TableRow>
               );
             })}
-            <tr>
+            <TableRow>
             {loading ? (
               // Use our custom loading state to show a loading indicator
-              <td colSpan="10000">Loading...</td>
+              <TableCell colSpan="10000">Loading...</TableCell>
             ) : (
-              <td colSpan="10000">
+              <TableCell colSpan="10000">
                 Showing {page.length} of ~{controlledPageCount * pageSize}{' '}
                 results
-              </td>
+              </TableCell>
             )}
-          </tr>
+          </TableRow>
           </TableBody>
         </MaUTable>
         <br />

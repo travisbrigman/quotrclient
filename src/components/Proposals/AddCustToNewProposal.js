@@ -13,10 +13,12 @@ export const AddCustomerToProposal = ({ open, onClose, constructNewProposal }) =
 
   const { getCustomers, customers } = useContext(CustomerContext);
 
+  //fetches customer list
   useEffect(() => {
     getCustomers()
 },[]);
 
+//constructs a new empty proposal associated with a customer ID
 const handleClick = (event) => {
 constructNewProposal(event.datum.id)
 onClose()

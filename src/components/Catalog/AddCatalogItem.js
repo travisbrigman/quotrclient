@@ -23,7 +23,8 @@ export const AddCatalogItem = () => {
     setChecked,
     updateItem,
     deleteCatalogItem,
-    setAddAccessoryState
+    setAddAccessoryState,
+    setAccessoryItemState
   } = useContext(CatalogContext);
 
   //modal glue
@@ -44,6 +45,7 @@ export const AddCatalogItem = () => {
   const [viewSingleEdit, setViewSingleEdit] = useState(false);
   const [viewSelectToEdit, setViewSelectToEdit] = useState(false);
 
+  //monitors if app is in edit mode, and if so, puts the selected item into state
   useEffect(() => {
     if (editMode) {
       if (checked.length !== 0) {
@@ -52,12 +54,14 @@ export const AddCatalogItem = () => {
     }
   }, [checked, editMode]);
 
+  //helper function to convert image file to base 64
   const getBase64 = (file, callback) => {
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
     reader.readAsDataURL(file);
   };
 
+  //created the image string with the above helper function and sets it into state
   const createItemImageString = (event) => {
     getBase64(event.target.files[0], (base64ImageString) => {
       setState({
@@ -67,6 +71,7 @@ export const AddCatalogItem = () => {
     });
   };
 
+  //builds a state object by adding items via setState, checks if the item types are either file or number
   function handleChange(evt) {
     if (evt.target.type === "file") {
       createItemImageString(evt);
@@ -83,6 +88,7 @@ export const AddCatalogItem = () => {
     }
   }
 
+  //either updates the db with edited object, or sends the created object to be added to the database
   const handleClick = () => {
     if (editMode) {
       updateItem({
@@ -105,6 +111,7 @@ export const AddCatalogItem = () => {
     setState({ created_on: jsonDate });
   };
 
+  //deletes items in the checked array from the database
   const handleDelete = () => {
     checked.forEach((checkedItemId) => {
       deleteCatalogItem(checkedItemId)
@@ -112,10 +119,13 @@ export const AddCatalogItem = () => {
     });
   };
 
+  //TODO:work on building out add accessory feature
   const accessoryClick = () => {
     setAddAccessoryState(true)
+    setAccessoryItemState(true)
   }
 
+  //array of items for the drop menu component
   const actionItems = [
     {
       label: <Box alignSelf="center">New</Box>,
@@ -240,7 +250,6 @@ export const AddCatalogItem = () => {
                     type="file"
                     name="image_path"
                     id="item_image"
-                    // value={state.image_path}
                     onChange={handleChange}
                   />
                 </FormField>

@@ -22,7 +22,8 @@ export const Customers = () => {
     getSingleCustomer,
     setCustomerInfo,
   } = useContext(CustomerContext);
-
+  
+  //calls popup to edit customer
   const editCustomer = (customerId) => {
     setClickedId(customerId);
     getSingleCustomer(customerId);
@@ -30,11 +31,13 @@ export const Customers = () => {
     onOpen();
   };
 
+  //calls the popup to create a new customer
   const newCustomer = () => {
     setCustomerInfo({});
     onOpen();
   };
 
+  //gets the list of customer
   useEffect(() => {
     getCustomers();
   }, []);

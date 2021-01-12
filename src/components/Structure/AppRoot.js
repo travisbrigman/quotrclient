@@ -8,9 +8,7 @@ import { ProposalProvider } from "../Proposals/ProposalProvider";
 import { CustomerProvider } from "../Customers/CustomerProvider";
 import { UserAvatar } from "./UserAvatar";
 import { UserProvider } from "../Users/UserProvider";
-import { Route } from "react-router-dom";
-import { CustomerProposal } from "../Proposals/CustomerProposal";
-
+//where central components are placed to assemble the app
 export const AppRoot = () => {
   const [activeItem, setActiveItem] = useState(1);
   const size = useContext(ResponsiveContext);

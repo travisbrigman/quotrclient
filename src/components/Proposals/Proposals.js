@@ -23,10 +23,12 @@ export const Proposals = () => {
 
   const { patchItem } = useContext(CatalogContext);
 
+  //fetches list of proposals
   useEffect(() => {
     getProposals();
   }, []);
 
+  //if there is a single propsosal loaded into state, get that proposal
   useEffect(() => {
     if (singleProposal.id !== undefined) {
       getSingleProposal(singleProposal.id);
@@ -46,11 +48,13 @@ export const Proposals = () => {
     setOpenModal(true);
   };
 
+  //builds an empty proposal
   const constructNewProposal = (selectedCustomerId) => {
     const propObject = { customer_id: selectedCustomerId };
     createProposal(propObject);
   };
 
+  //if theres a proposal set into state, render it to the page
   if (singleProposal.id !== undefined && open !== true) {
     setOpen(true);
   }
@@ -61,6 +65,7 @@ export const Proposals = () => {
     setOpen(true);
   };
 
+  //deletes proposal
   const deleteSingleProposal = (proposalToDelete) => {
     setOpen(false)
     deleteProposal(proposalToDelete);
@@ -86,6 +91,7 @@ export const Proposals = () => {
         : []
     );
 
+    //deletes checked line item
   const deleteLineItem = () => {
     proposalChecked.forEach((checkedLineItemId) => {
       deleteProposalItem(checkedLineItemId);
@@ -94,6 +100,7 @@ export const Proposals = () => {
     getSingleProposal(singleProposal.id);
   };
 
+  //updates the margin of the line item
   const editLineItem = (margin) => {
     proposalChecked.forEach((checkedLineItemId) => {
       const matched = singleProposal.proposalitems.find(

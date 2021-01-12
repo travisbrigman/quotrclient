@@ -18,7 +18,7 @@ const marginValueChecker = (marginValue) => {
     }
     return percentFormatter.format(margin)
 }
-
+ //columns for proposal datatable
 export const columns = [
     {
       property: 'item.make',
@@ -53,6 +53,7 @@ export const columns = [
     }
 ]
 
+// columns for the exported customer view
 export const exportColumns = [
     {
       property: 'item.make',
@@ -75,6 +76,7 @@ export const exportColumns = [
     }
 ]
 
+// columns for the proposal list
 export const customerColumns =[
     {
         property:"customer.first_name",

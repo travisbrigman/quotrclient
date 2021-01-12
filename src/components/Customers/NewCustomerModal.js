@@ -29,8 +29,10 @@ export const NewCustomerModal = (
     ProposalContext
   );
 
+  //state variable that controls cantdelete popup
   const [viewCantDelete, setViewCantDelete] = useState(false);
 
+  //builds state object
   function handleChange(evt) {
     const value = evt.target.value;
     setCustomerInfo({
@@ -39,6 +41,7 @@ export const NewCustomerModal = (
     });
   }
 
+  //either creates or edits a customer
   const handleNewCustomer = (e) => {
     e.preventDefault();
     if (editMode) {
@@ -63,6 +66,8 @@ export const NewCustomerModal = (
     }
   };
 
+  //function associated with delete button that checks if proposals are associated with customerID, if not, it deletes them
+
   const deleteClicked = () => {
     getProposalsByCustomer(customerId)
     .then( () => {
@@ -75,10 +80,10 @@ export const NewCustomerModal = (
       }
     }
     )
-
     setProposals([]);
   };
 
+  //text for JSX Below
   const modalMessage = editMode ? "Edit Customer Info" : "Create New Customer";
   const buttonText = editMode ? "Update" : "Create";
   return (

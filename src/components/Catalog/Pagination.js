@@ -1,6 +1,8 @@
-import { Row, Col, Input, CustomInput } from "reactstrap";
-import { Box, Button, Select, Text, TextInput } from "grommet"
+import { Col, CustomInput } from "reactstrap";
+import { Box, Button, Text, TextInput } from "grommet"
 import { CaretNext, CaretPrevious, ChapterNext, ChapterPrevious } from "grommet-icons"
+
+// pagination controls component for React Table
 
 export const Pagination = ({    canPreviousPage,
     canNextPage,
@@ -66,7 +68,6 @@ export const Pagination = ({    canPreviousPage,
               </option>
             ))}
           </CustomInput>
-          {/* <Select type="select" value={pageSize} key={pageSize} onChange={onChangeInSelect}  options={[10, 20, 30, 40, 50]}/> */}
         </Col>
         <Box direction="row">
           <Button color="primary" 

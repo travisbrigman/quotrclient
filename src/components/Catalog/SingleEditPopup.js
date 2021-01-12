@@ -1,6 +1,7 @@
 import {Box, Button, Layer, Text } from "grommet"
 import { FormClose, StatusGood} from "grommet-icons"
 
+// popup to remind user that multiple items will not be edited.
 export const SingleEditPopUp = ({viewSingleEdit, setViewSingleEdit}) => {
 
     return(

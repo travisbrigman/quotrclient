@@ -8,9 +8,11 @@ import {
   Text
 } from "grommet";
 
+// popup that allows user to edit margin value of all selected items in proposal
 export const EditLineItem = ({ open, setOpen, editLineItem }) => {
   const [marginValue, setMarginValue] = useState(0);
 
+  //handles the PUT request
   const handleClick = () => {
     editLineItem((marginValue/100));
     setMarginValue(0)

@@ -4,7 +4,6 @@ import { AppIdentity } from "./AppIdentity";
 import { Box, Button, Header, Heading } from "grommet";
 import { Logout } from "grommet-icons";
 import { PropTypes } from "prop-types";
-import { PartsCatalog } from "../Catalog/PartsCatalog";
 import { Proposals } from "../Proposals/Proposals";
 import { Users } from "../Users/Users";
 import { Customers } from "../Customers/Customers";
@@ -13,6 +12,8 @@ import { AddCatalogItem } from "../Catalog/AddCatalogItem";
 import { CustomerProposal } from "../Proposals/CustomerProposal";
 import { PartsCatalogRT } from "../Catalog/PartsCatalogRT";
 
+
+//essentially what is seen to the right of the nav bar and below the header. This is where central routing occurs
 export const PageContent = ({ activeItem }) => {
   const { name } = pages[activeItem];
   const history = useHistory();
@@ -49,7 +50,6 @@ export const PageContent = ({ activeItem }) => {
               render={(props, size) => (
                 <Box direction="column">
                   <AddCatalogItem />
-                  {/* <PartsCatalog {...props} /> */}
                   <PartsCatalogRT {...props} />
                 </Box>
               )}

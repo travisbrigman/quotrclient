@@ -1,3 +1,5 @@
+//columns for the customer DataTable
+
 export const columns = [
     {
       property: 'first_name',

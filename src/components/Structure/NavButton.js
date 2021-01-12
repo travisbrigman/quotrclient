@@ -1,11 +1,11 @@
-import { useState } from "react";
 import {Box, Button} from 'grommet'
 import { useRef } from 'react'
 import PropTypes from 'prop-types';
 
+//button component used to build up main navigation
+
 export const NavButton = ({ active, icon, name, label, ...rest }) => {
   const ref = useRef();
-const [ hover, setHover ] = useState()
 
   return (
     <Box fill="horizontal">
@@ -15,10 +15,6 @@ const [ hover, setHover ] = useState()
         label={<Box alignContent="end">{label}</Box>}
         {...rest}
         plain={true}
-        onMouseOver={() => setHover(true)}
-        onFocus={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
-        onBlur={() => setHover(false)}
       />
     </Box>
   );

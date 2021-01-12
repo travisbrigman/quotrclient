@@ -1,5 +1,5 @@
 import React from "react"
-
+//array of names and icons passed to PageContent
 import {
     Catalog,
     Clipboard,

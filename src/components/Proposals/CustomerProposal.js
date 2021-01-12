@@ -4,6 +4,7 @@ import { exportColumns } from "./ProposalColumns";
 import { ProposalContext } from "./ProposalProvider";
 import Pdf from "react-to-pdf";
 
+//PDF Generator window
 export const CustomerProposal = (props) => {
   const { singleProposal } = useContext(ProposalContext);
   const PdfRef = createRef();

@@ -11,12 +11,9 @@ import { Compliance, Down, Next } from "grommet-icons";
 import { CatalogContext } from "./CatalogProvider";
 import { TableModule } from "./TableRT";
 
-export const PartsCatalogRT = (props) => {
+export const PartsCatalogRT = () => {
   const {
-    getItems,
-    items,
     checked,
-    setChecked,
     createAccessory,
     setAccessoryArray,
     accessoryArray,
@@ -24,13 +21,15 @@ export const PartsCatalogRT = (props) => {
     addAccessoryState,
     getItemsByPage,
     data,
-    setData,
     pageCount,
-    skipPageResetRef
+    setAccessoryItemState,
+    accessoryItemState
   } = useContext(CatalogContext);
 
+  //state variable for modal
   const [viewQuantityPopup, setViewQuantityPopup] = useState(false);
 
+  //this stuff helps accomplish server calls for manual table pagination
   const [loading, setLoading] = useState(false);
   const fetchIdRef = useRef(0)
 
@@ -38,18 +37,19 @@ export const PartsCatalogRT = (props) => {
     // This will get called when the table needs new data
     // Give this fetch an ID
     const fetchId = ++fetchIdRef.current;
-    
+    const pageOffset = pageSize * pageIndex
     // Set the loading state
     setLoading(true);
-    console.log(fetchId);
     
     // Only update the data if this is the latest fetch
     if (fetchId === fetchIdRef.current) {
-      getItemsByPage(pageSize, pageIndex);
+      getItemsByPage(pageSize, pageOffset);
       setLoading(false);
     }
   }, []);
 
+
+  //TODO: Get accessories working
   /*
   click on add accessories
   select an item
@@ -60,27 +60,34 @@ export const PartsCatalogRT = (props) => {
   send POST request
   */
 
-  // const [accessorizedItem, setAccessorizedItem] = useState(0)
-
-  const accessorizedItem = useRef();
+  const accessorizedItem = useRef(-1);
+  
   useEffect(() => {
-    if (addAccessoryState) {
-      //  setAccessorizedItem(checked[0])
+    if (addAccessoryState && setAccessoryItemState) {
       accessorizedItem.current = checked[0];
+      if (accessorizedItem.current !== undefined) {
+
+        setAccessoryItemState(false)
+      }
     }
-    if (addAccessoryState && accessorizedItem !== 0) {
+    if (addAccessoryState && !accessoryItemState) {
+      // toggleAllRowsSelected(false)
       setAccessoryArray(checked);
     }
-  }, [addAccessoryState, checked]);
+  }, [addAccessoryState, checked, accessoryItemState]);
 
-  //get the array of catalog items from the database
-  // useEffect(() => {
-  //   getItems();
-  // }, []);
+  const makeAccessories = () => {
+    accessoryArray.forEach((acc) => {
+      const accessoryItem = {
+        item: accessorizedItem.current,
+        accessory: acc,
+      };
+      createAccessory(accessoryItem);
+    });
+    setAddAccessoryState(false);
+  };
 
-  //put the items in a useMemo as "required" by React-Table 7
-  // const data = useMemo(() => items, [items]);
-
+  //🏛🏛 Column Setup 🏛🏛
   //little helper function to convert ISO 8601 to MM/DD/YYYY
   const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -156,17 +163,6 @@ export const PartsCatalogRT = (props) => {
     ],
     []
   );
-
-  const makeAccessories = () => {
-    accessoryArray.forEach((acc) => {
-      const accessoryItem = {
-        item: accessorizedItem.current,
-        accessory: acc,
-      };
-      createAccessory(accessoryItem);
-    });
-    setAddAccessoryState(false);
-  };
 
   return (
     <>

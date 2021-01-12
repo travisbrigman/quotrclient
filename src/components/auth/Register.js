@@ -44,7 +44,6 @@ export const Register = (props) => {
 
     return (
         <Main>
-
             <dialog className="dialog dialog--password" ref={passwordDialog}>
                 <div>Passwords do not match</div>
                 <button className="button--close" onClick={e => passwordDialog.current.close()}>Close</button>

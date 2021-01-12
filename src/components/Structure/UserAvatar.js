@@ -3,6 +3,8 @@ import { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../Users/UserProvider";
 
+//the little circle and initials in the bottom left corner
+
 export const UserAvatar = ({ setActiveItem }, props) => {
   const { currentUser, getCurrentUser } = useContext(UserContext);
 

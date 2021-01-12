@@ -4,6 +4,7 @@ import { Register } from "./components/auth/Register";
 import { AppRoot } from "./components/Structure/AppRoot";
 import { UserProvider } from "./components/Users/UserProvider";
 
+//main section of app along with login and register pages
 export const Quotr = () => {
   return (
     <>

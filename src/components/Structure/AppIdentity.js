@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Heading, Text } from "grommet";
 import { Edit } from "grommet-icons";
 import { PropTypes } from "prop-types";
-
+// basicall the header bar of the app
 export const AppIdentity = ({ name }) => {
   return (
     <Box

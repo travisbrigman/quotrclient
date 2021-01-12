@@ -1,5 +1,6 @@
 import {Box, Button, Layer, Text } from "grommet"
 import { FormClose, StatusGood} from "grommet-icons"
+//shows that a customer cant be deleted because they are associated with a proposal
 
 export const CantDelete = ({viewCantDelete, setViewCantDelete}) => {
 

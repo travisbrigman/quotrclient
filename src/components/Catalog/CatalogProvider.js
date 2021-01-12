@@ -17,6 +17,7 @@ export const CatalogProvider = (props) => {
   const [valueMultiple, setValueMultiple] = useState([]);
   const [accessoryArray, setAccessoryArray] = useState([]);
   const [addAccessoryState, setAddAccessoryState] = useState(false);
+  const [accessoryItemState, setAccessoryItemState ] = useState(false)
  
 
   const getItems = () => {
@@ -164,6 +165,8 @@ export const CatalogProvider = (props) => {
         data,
         setData,
         pageCount,
+        accessoryItemState,
+        setAccessoryItemState
       }}
     >
       {props.children}

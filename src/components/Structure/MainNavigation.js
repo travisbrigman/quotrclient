@@ -5,6 +5,8 @@ import { NavButton } from "./NavButton";
 import { pages } from "./Pages";
 import { Link } from "react-router-dom";
 
+// component that develops the nav links in the sidebar
+
 export const MainNavigation = ({ activeItem, setActiveItem }, props) => {
   const size = useContext(ResponsiveContext);
   const maxItems = size !== "small" ? undefined : 3;

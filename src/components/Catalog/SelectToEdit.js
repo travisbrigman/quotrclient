@@ -1,5 +1,6 @@
 import {Box, Button, Layer, Text } from "grommet"
 import { FormClose, StatusGood} from "grommet-icons"
+// a little popup that reminds you to select an item in order to edit it.
 
 export const SelectToEdit = ({viewSelectToEdit, setViewSelectToEdit}) => {
 

@@ -1,5 +1,5 @@
 import { TextInput } from "grommet"
-
+// filters for React-Table 
 export const Filter = ({ column }) => {
   return (
     <div style={{ marginTop: 5 }}>
