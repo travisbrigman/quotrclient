@@ -20,5 +20,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 5. Copy and paste sample api below into the database
 6. In a separate terminal, run `npm start` from the repository directory
 
-##### Setup
+##### Screenshots
 
+![image](https://user-images.githubusercontent.com/25273870/106772066-42695100-6605-11eb-9873-8e88fd98f6e5.png)
